@@ -1,5 +1,5 @@
-%#eml
-function [qdd,Fzf,Fzr,Flr,Ftr,Flf,Ftf,vlr,vtr,vlf,vtf,r0,r7,IMU,fx,hx]         = mdl_motorcycle(u,x,p)
+
+function [qdd,Fzf,Fzr,Flr,Ftr,Flf,Ftf,vlr,vtr,vlf,vtf,r0,r7,IMU,fx,hx] = mdl_motorcycle(u,x,p)
 % from nonlinear state space to generalized coordinates
 qd=x(1:13);
 q =x(14:26);
@@ -116,7 +116,7 @@ C=[0 0 0 (-c0*(c2*sa+s2*sb+c7*sc)-s0*s1*s(34))*q0d+c0*c1*s(34)*q1d+(-s0*(-s2*sa+
 
 % preparation on force calculation
 g=9.81;
-q70=-.2;
+q70=-0.2;
 qf0=0.3;
 
 r0d =[qxd+(-s0*(-c2*l3-c7*l2)-c0*(-c1*s1*a1-s1*(s2*l3+s7*l2-b1-c1*a1)))*q0d+s0*c1*(s2*l3+s7*l2-b1-c1*a1)*q1d+(c0*s2*l3+s0*s1*c2*l3)*q2d+(c0*s7*l2+s0*s1*c7*l2)*q7d+c0*(-b1-c1*a1)*q8d
@@ -135,8 +135,8 @@ vlf = c4*r7d(1)+s4*r7d(2)+.01;
 v1  = [c0*s2+s0*s1*c2;s0*s2-c0*s1*c2;c1*c2];
 v2  = [c4*s6+s4*s5*c6;s4*s6-c4*s5*c6;c5*c6];
 
-Rm3 = R0*(R1*R2); % frame
-Rm4 = R4*R5*R6; % steering head
+Rm3 = R0*(R1*R2);               % frame
+Rm4 = R4*R5*R6;                 % steering head
 
     % 1. find the axis about to rotate and the angle
     v1 = Rm3*[0;0;1];
@@ -238,6 +238,7 @@ rm7 = [qx;qy;qz]+R0*(R1*(R2*[x7;y7;z7]));
 % rm7d1= [qxd;qyd;qzd]+q0d*R0q*(R1*(R2*[x7;y7;z7]))+R0*(q1d*R1q*(R2*[x7;y7;z7])+R1*(q2d*R2q*[x7;y7;z7]))
 % rm7d2= [qxd;qyd;qzd]+R0q*(R1*(R2*q0d*[x7;y7;z7]))+R0*(R1q*(R2*q1d*[x7;y7;z7])+R1*(R2q*q2d*[x7;y7;z7]))
 % temp=simple(rm7d1-rm7d2)
+
 % acceleration vector
 % rm7dd=(jacobian(rm7d,[q;qd])*[qd;qdd])
 % rm7dd1=(jacobian(rm7d1,[q;qd])*[qd;qdd])% this vector is in global coordinates, but the sensor measures in local coordinates.

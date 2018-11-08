@@ -23,7 +23,7 @@ n_lap = input(laps);
 ds = par.ds;
 
 if strcmp(track_n{1}, 'Straight') 
-    load([track_n{1},'_track_ds_',num2str(ds),'.mat']);
+    load([track_n{1},'_track_ds_',num2str(par.ds),'.mat']);
 elseif strcmp(track_n{1}, 'Assen')
     load([track_n{1},'track_ds_',num2str(ds),'.mat']);
 	curv3 = curv;
@@ -39,7 +39,7 @@ elseif strcmp(track_n{1}, 'Assen_middle')
 end
 
 % Load bike constants
-run bike_constants.m
+%run bike_constants.m
   
 %% Adapt track array to desired no of laps. 
 
@@ -125,7 +125,7 @@ hold all
 end
 
 %% Computation and plot Lap times
-[lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap);
+[lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par);
 ax = subplot(3, 2, 5);
 text(0.5,0.5,lapstr);
 set ( ax, 'visible', 'off')

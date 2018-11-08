@@ -25,8 +25,8 @@ createUIcontrols;
 %%
 
 
-    %   load('FirstWheelie1.mat','q','qd','t');% WHEELIE
-        load('sample_data.mat','q','qd','t'); % SAMPLE_DATA by W.Ooms
+       load('FirstWheelie1.mat','q','qd','t');% WHEELIE
+    %    load('sample_data.mat','q','qd','t'); % SAMPLE_DATA by W.Ooms
     %   load('stoppie_3.mat','q','qd','t');   % STOPPIE
 
 

@@ -1,6 +1,6 @@
 function [par] = parameters()
 %%% Track parameters
-par.ds = 1;
+par.ds = 0.1;
 
 %%% Bike measurements %%%
 par.m=300;                 % Mass of the motorcycle with the rider 310, without 250 [kg]
@@ -30,11 +30,11 @@ par.Cl=0.12;                % Lift force coefficient mulitlied by frontal area =
 
 %%% Driving force %%%
 par.mu_static=1;            % Static friction coefficient for rear tire
-par.mu_dynamic=0.85;         % Dynamic friction coefficient for rear tire
+par.mu_dynamic=0.85;         % Dynamic friction coefficient for rear tire 0.85
 
 %%% Power %%%
 %P=110;                     % Max power of the motor [kW]
-par.gear_ratio = 17/30;     % gear ratio (between motor and sprochet) - 17/41
+par.gear_ratio = 17/41;     % gear ratio (between motor and sprochet) - 17/41
 
 %%% Radia %%%
 par.Rw = 0.3;               % Wheel radius
