@@ -35,7 +35,7 @@ for idx = 2:size(v_max,2)
     % Check powercurve for max T available in Torque/rpm curve 
     v_mm   = 60*v_acc(idx-1);                                       % Velocity of the wheel in meter/minute
     rpm_rs = v_mm/par.d;                                            % Rpm of the rear sprochet
-    rpm_m(idx)  = rpm_rs/par.gear_ratio;                            % Rpm of motor
+    rpm_m(idx)  = rpm_rs*par.gear_ratio;                            % Rpm of motor
     
     Tm = (210-0.0388*(rpm_m(idx)-3200))*((rpm_m(idx)-3200)>0 && (rpm_m(idx)-3200)<2300) + ...
          (400-0.12*(rpm_m(idx)-1732))*((rpm_m(idx)-1732)>0 && (rpm_m(idx)-1732)<1468) +...

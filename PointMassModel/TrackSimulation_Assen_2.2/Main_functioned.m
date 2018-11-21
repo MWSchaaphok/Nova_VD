@@ -55,7 +55,7 @@ for i=2:n_lap
     dis_temp = [dis_temp dist(2:end)];
 end
 dist = cumsum(dis_temp);
-
+%dist = dis_temp;
 curv4 = temp_curv4;
 
 %% Compute acceleration and velocity profile based on Forward Backward Pass method.
@@ -83,7 +83,7 @@ ylabel('Energy [kWh]');
 %%  Visualizing the velocities
 subplot(3,2,2)
 plot(dist,v_dec,'-','Color','black')
-hold on;
+%hold on;
 %plot(dist,v_acc,'--','Color','blue');
 % hold on;
 %plot(dist,v_max,'-', 'Color','red')
