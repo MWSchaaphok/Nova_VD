@@ -8,7 +8,7 @@ global ds
 par = parameters();
 track_n = 'Straight';
 n_lap = 1;
-ds=0.1;
+ds=par.ds;
 load([track_n,'_track_ds_',num2str(ds),'.mat']);
 
 % Load bike constants

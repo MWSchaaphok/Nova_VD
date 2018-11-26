@@ -1,4 +1,4 @@
-function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(curv4,par)
+function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass1(curv4,par,Tm)
 
 %% Velocity profile phase 1 
 
@@ -16,7 +16,7 @@ a_acc = zeros(size(v_max'));                         % acceleration
 rpm_m = zeros(size(v_max'));                         % Rpm motor
 P_out = zeros(size(v_max'));
 W     = zeros(size(v_max'));
-%v_acc(1) = 15.61;
+
 for idx = 2:size(v_max,2)
     Wf    = a_acc(idx-1)*par.h/par.b*par.m;                         % Weight shift to front tire [N]
     
@@ -37,15 +37,15 @@ for idx = 2:size(v_max,2)
     rpm_rs = v_mm/par.d;                                            % Rpm of the rear sprochet
     rpm_m(idx)  = rpm_rs/par.gear_ratio;                            % Rpm of motor
     
-    Tm = (210-0.0388*(rpm_m(idx)-3200))*((rpm_m(idx)-3200)>0 && (rpm_m(idx)-3200)<2300) + ...
-         (400-0.12*(rpm_m(idx)-1732))*((rpm_m(idx)-1732)>0 && (rpm_m(idx)-1732)<1468) +...
-          400*(rpm_m(idx)<1732);
+    %Tm = (210-0.0388*(rpm_m(idx)-3200))*((rpm_m(idx)-3200)>0 && (rpm_m(idx)-3200)<2300) + ...
+    %     (400-0.12*(rpm_m(idx)-1732))*((rpm_m(idx)-1732)>0 && (rpm_m(idx)-1732)<1468) +...
+    %      400*(rpm_m(idx)<1732);
     %Tm = (200-0.026*(rpm_m(idx)-7000))*((rpm_m(idx)-7000)>0 && (rpm_m(idx)-7000)<3000) + ...
     %     (260-0.024*(rpm_m(idx)-4500))*((rpm_m(idx)-4500)>0 && (rpm_m(idx)-4500)<2500) +...
     %      260*(rpm_m(idx)<4500);
-    %Tm = 200; 
+     
     % Compute drive force, acceleration and velocity 
-    drive_force = Tm/(par.gear_ratio*par.Rw);                             % Compute available drive force
+    drive_force = Tm/(par.gear_ratio*par.Rw);                          % Compute available drive force
     forces_x = drive_force -Fd -Ffr -Fff;                           % Sum all forces to find available force
     sf = min(forces_x, D);                                          % Limit drive_force to prevent slipping
     
@@ -57,12 +57,8 @@ for idx = 2:size(v_max,2)
     
     % Energy calculations
     F_e = sf + Fd + Ffr + Fff;                                      % Force for energy calculations
-    F_c = Fd+Ffr+Fff; 
-    W1(idx) = F_e* par.ds;                                          % Compute Work. 
-    W2(idx) = F_c*par.ds;
+    W(idx) = F_e * par.ds;                                          % Compute Work. 
 end
-W = ((v_acc_temp == v_acc).*W1 + (v_acc == v_max).*W2);
-size(W)
 %% iii. Backward Pass
 v_dec = ones(size(v_acc))*v_acc(end);
 %a_dec = -0.8*g;
@@ -95,6 +91,5 @@ end
 %fprintf(num2str(min(a_dec(:))))
 %% Combine the phases 
 a = (v_dec ==v_acc_temp).*a_acc' + (v_dec ~=v_acc).*a_dec';
-size((v_dec == v_acc))
-W = (v_dec == v_acc).* W;                                      % Neglect forces during braking phase
+W = (v_dec == v_acc).* W';                                      % Neglect forces during braking phase
 end

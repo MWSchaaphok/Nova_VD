@@ -3,7 +3,7 @@ function [par] = parameters()
 par.ds = 1;
 
 %%% Bike measurements %%%
-par.m=300;                 % Mass of the motorcycle with the rider 310, without 250 [kg]
+par.m=290;                 % Mass of the motorcycle with the rider 310, without 250 [kg]
 par.g=9.81;                % Gravitational constant [ms-2]
 par.b = 1.4;               % Wheelbase [m] 
 par.h = 0.375*par.b;       % Height COG [m] -> temporary approx based on Foalte/Cossalter
@@ -31,7 +31,7 @@ par.Cl=0.12;                % Lift force coefficient mulitlied by frontal area =
 
 %%% Driving force %%%
 par.mu_static=1;            % Static friction coefficient for rear tire
-par.mu_dynamic=1.1;         % Dynamic friction coefficient for rear tire 0.85
+par.mu_dynamic=1.1;           % Dynamic friction coefficient for rear tire 0.85
 
 %%% Power %%%
 %P=110;                     % Max power of the motor [kW]
@@ -39,8 +39,8 @@ par.gear_ratio = 17/41;     % gear ratio (between motor and sprochet) - 17/41
 
 %%% Radia %%%
 par.Rw = 0.3;               % Wheel radius
-par.Rm = 0.0435;            % Motor shaft radius
-par.Rs = 0.11;              % Sprochet radius
+%par.Rm = 0.0435;            % Motor shaft radius
+%par.Rs = 0.11;              % Sprochet radius
 
 
 

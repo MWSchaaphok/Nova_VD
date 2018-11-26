@@ -1,4 +1,4 @@
-function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(curv4,par)
+function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass1(curv4,par,Tm)
 
 %% Velocity profile phase 1 
 
@@ -35,14 +35,17 @@ for idx = 2:size(v_max,2)
     % Check powercurve for max T available in Torque/rpm curve 
     v_mm   = 60*v_acc(idx-1);                                       % Velocity of the wheel in meter/minute
     rpm_rs = v_mm/par.d;                                            % Rpm of the rear sprochet
-    rpm_m(idx)  = rpm_rs*par.gear_ratio;                            % Rpm of motor
+    rpm_m(idx)  = rpm_rs/par.gear_ratio;                            % Rpm of motor
     
-    Tm = (210-0.0388*(rpm_m(idx)-3200))*((rpm_m(idx)-3200)>0 && (rpm_m(idx)-3200)<2300) + ...
-         (400-0.12*(rpm_m(idx)-1732))*((rpm_m(idx)-1732)>0 && (rpm_m(idx)-1732)<1468) +...
-          400*(rpm_m(idx)<1732);
-    
+    %Tm = (210-0.0388*(rpm_m(idx)-3200))*((rpm_m(idx)-3200)>0 && (rpm_m(idx)-3200)<2300) + ...
+    %     (400-0.12*(rpm_m(idx)-1732))*((rpm_m(idx)-1732)>0 && (rpm_m(idx)-1732)<1468) +...
+    %      400*(rpm_m(idx)<1732);
+    %Tm = (200-0.026*(rpm_m(idx)-7000))*((rpm_m(idx)-7000)>0 && (rpm_m(idx)-7000)<3000) + ...
+    %     (260-0.024*(rpm_m(idx)-4500))*((rpm_m(idx)-4500)>0 && (rpm_m(idx)-4500)<2500) +...
+    %      260*(rpm_m(idx)<4500);
+     
     % Compute drive force, acceleration and velocity 
-    drive_force = Tm*par.Rs/par.Rm/par.Rw;                          % Compute available drive force
+    drive_force = Tm/(par.gear_ratio*par.Rw);                          % Compute available drive force
     forces_x = drive_force -Fd -Ffr -Fff;                           % Sum all forces to find available force
     sf = min(forces_x, D);                                          % Limit drive_force to prevent slipping
     
@@ -78,7 +81,7 @@ for id = size(v_dec,2):-1:2
 
     Fb = par.mu_dynamic*Nf;                                     % Compute maximuma allowed brake force to prevent slipping
     a_dec(id) = - Fb/par.m;
-    a_dec(id) = -par.g;
+    a_dec(id) = -1.0*par.g;
     v_dec(id-1) = sqrt((v_dec(id))^2 - 2*a_dec(id)*par.ds);
     v_dec(id-1) = min(v_dec(id-1),v_acc(id-1));
     
