@@ -9,7 +9,7 @@ par.b = 1.4;               % Wheelbase [m]
 par.c_h = 0.3;            % Coefficient COG height
 par.h = par.c_h*par.b;     % Height COG [m] -> temporary approx based on Foalte/Cossalter
 par.d = 2.02;              % Circumference wheel
-par.l1 = 0.6;            % Coefficient for weight distribution front [N]
+par.l1 = 0.;            % Coefficient for weight distribution front [N]
 par.l2 = 1-par.l1;         % Coefficient for weight distribution back  [N]
 par.t  = 0.4;              % Thickness of the body
 

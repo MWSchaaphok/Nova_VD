@@ -23,7 +23,7 @@ a_nd = 1-b_nd;
 syms ax ay 
 f1(ay,ax) = (1/(a_nd + h_nd*(ax/(sqrt(1+ay^2))))*ax/(mu_x)*alpha)^2+(ay/(mu_y))^2-1;
 f2(ay,ax) = b_nd - h_nd*(ax/(sqrt(1+ay^2)));
-f3(ay,ax) = (1/(b_nd - h_nd*(ax/(sqrt(1+ay^2))))*ax/(mu_x)*alpha)^2 + (ay/(mu_y))^2 -1;
+f3(ay,ax) = (1/(b_nd - h_nd*(ax/(sqrt(1+ay^2))))*ax/(mu_x))^2 + (ay/(mu_y))^2 -1;
 f4(ay,ax) = a_nd + h_nd*(ax/(sqrt(1+ay^2)));
 figure; 
 fimplicit(f1(ay,ax), [0,1.5,-1.5,1.5])
