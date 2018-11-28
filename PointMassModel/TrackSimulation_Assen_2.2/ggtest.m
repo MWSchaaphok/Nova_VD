@@ -1,18 +1,20 @@
 %% Plot GG-diagrams 
 clear all
 % Dimensionalized parameters
-p = 1.4;                     % Wheelbase [m]
-b = 0.45*p;                  % Distance COG to rear wheel [m]
-a = p - b;                   % Distance COG to front wheel [m]
-h = 0.5*p;                   % Height COG [m]
-alpha = 1;                   % Distribution acceleration/braking
-mu_x  = 1.1;                 % Longitudinal friction coefficient
-mu_y = 1.1;                  % Lateral friction coefficient
+b = 1.4;                     % Wheelbase [m]
+c_b = 0.47;                  % Coefficient for location COG to rear wheel
+c_h = 0.375;                 % Coefficient height COG
+l2 = c_b*b;                  % Distance COG to rear wheel [m]
+l1 = b - l2;                 % Distance COG to front wheel [m]
+h = c_h*b;                   % Height COG [m]
+alpha = 1;                   % Distribution force rear wheel acceleration
+mu_x  = 1.3;                 % Longitudinal friction coefficient
+mu_y = 1.2;                  % Lateral friction coefficient
 g = 9.81;
 
 % Non-dimensionalized parameters
-h_nd = h/p;
-b_nd = b/p;
+h_nd = h/b;
+b_nd = l2/b;
 a_nd = 1-b_nd;
 
 
@@ -27,9 +29,10 @@ figure;
 fimplicit(f1(ay,ax), [0,1.5,-1.5,1.5])
 hold on
 fimplicit(f2(ay,ax) ,[0,1.5,-1.5,1.5])
-alpha = 0.2; 
+alpha = 0;                                                  % Distribution force rear wheel during braking
 fimplicit(f3(ay,ax) ,[-1.5,0,-1.5,1.5])
 fimplicit(f4(ay,ax) ,[-1.5,0,-1.5,1.5])
+fimplicit((ax/mu_x)^2 + (ay/mu_y)^2 - 1,[-1.5,1.5,-1.5,1.5],'LineStyle','-.')   % friction ellipse  
 title('GG diagram')
 xlabel('a_x (non-dimensional)')
 ylabel('a_y (non-dimensional)')

@@ -37,15 +37,15 @@ for idx = 2:size(v_max,2)
     rpm_rs = v_mm/par.d;                                            % Rpm of the rear sprochet
     rpm_m(idx)  = rpm_rs/par.gear_ratio;                            % Rpm of motor
     
-    Tm = (210-0.0388*(rpm_m(idx)-3200))*((rpm_m(idx)-3200)>0 && (rpm_m(idx)-3200)<2300) + ...
-         (400-0.12*(rpm_m(idx)-1732))*((rpm_m(idx)-1732)>0 && (rpm_m(idx)-1732)<1468) +...
-          400*(rpm_m(idx)<1732);
+    %Tm = (210-0.0388*(rpm_m(idx)-3200))*((rpm_m(idx)-3200)>0 && (rpm_m(idx)-3200)<2300) + ...
+    %     (400-0.12*(rpm_m(idx)-1732))*((rpm_m(idx)-1732)>0 && (rpm_m(idx)-1732)<1468) +...
+    %      400*(rpm_m(idx)<1732);
     %Tm = (200-0.026*(rpm_m(idx)-7000))*((rpm_m(idx)-7000)>0 && (rpm_m(idx)-7000)<3000) + ...
     %     (260-0.024*(rpm_m(idx)-4500))*((rpm_m(idx)-4500)>0 && (rpm_m(idx)-4500)<2500) +...
     %      260*(rpm_m(idx)<4500);
-    %Tm = 200; 
+     
     % Compute drive force, acceleration and velocity 
-    drive_force = Tm/(par.gear_ratio*par.Rw);                             % Compute available drive force
+    drive_force = par.Tm/(par.gear_ratio*par.Rw);                       % Compute available drive force
     forces_x = drive_force -Fd -Ffr -Fff;                           % Sum all forces to find available force
     sf = min(forces_x, D);                                          % Limit drive_force to prevent slipping
     
@@ -97,4 +97,5 @@ end
 a = (v_dec ==v_acc_temp).*a_acc' + (v_dec ~=v_acc).*a_dec';
 size((v_dec == v_acc))
 W = (v_dec == v_acc).* W;                                      % Neglect forces during braking phase
+
 end

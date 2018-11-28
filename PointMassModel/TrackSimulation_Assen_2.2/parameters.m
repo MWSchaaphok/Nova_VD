@@ -32,15 +32,15 @@ par.Cl=0.12;                % Lift force coefficient mulitlied by frontal area =
 %%% Driving force %%%
 par.mu_static=1;            % Static friction coefficient for rear tire
 par.mu_dynamic=1.1;           % Dynamic friction coefficient for rear tire 0.85
+par.Tm = 240;                   % Continuous driving torque
 
 %%% Power %%%
 %P=110;                     % Max power of the motor [kW]
-par.gear_ratio = 17/41;     % gear ratio (between motor and sprochet) - 17/41
+par.gear_ratio = 17/61;     % gear ratio (between motor and sprochet) - 17/41
 
 %%% Radia %%%
 par.Rw = 0.3;               % Wheel radius
-%par.Rm = 0.0435;            % Motor shaft radius
-%par.Rs = 0.11;              % Sprochet radius
+
 
 
 

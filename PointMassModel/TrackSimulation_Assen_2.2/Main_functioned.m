@@ -68,6 +68,9 @@ curv4 = temp_curv4;
 tic;
 [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(curv4,par);
 toc
+curv = curv3.*(abs(curv3)>1e-15);
+a_y = v_dec.^2./(1./abs(curv3));
+roll = atan(a_y./par.g);
 
 %% Computing total required energy and RPM
 E_d = W./(3600*1000);               % Energy per distance step
