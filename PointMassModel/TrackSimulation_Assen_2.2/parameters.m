@@ -32,8 +32,8 @@ par.Cl=0.12;                % Lift force coefficient mulitlied by frontal area =
 
 %%% Driving force %%%
 par.mu_static=1;            % Static friction coefficient for rear tire
-par.mu_dynamic=1.1;           % Dynamic friction coefficient for rear tire 0.85
-par.Tm = 240;                   % Continuous driving torque
+par.mu_dynamic=1.1;         % Dynamic friction coefficient for rear tire 0.85
+par.Tm = 240;               % Continuous driving torque
 
 %%% Power %%%
 %P=110;                     % Max power of the motor [kW]

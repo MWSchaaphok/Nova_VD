@@ -1,4 +1,4 @@
-function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(curv4,par)
+function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPassCh(curv4,par)
 
 %% Velocity profile phase 1 
 
@@ -81,14 +81,18 @@ for id = size(v_dec,2):-1:2
 
     Fb = par.mu_dynamic*Nf;                                     % Compute maximuma allowed brake force to prevent slipping
 %     % Non-dimensionalized parameters
-%     h_nd = par.h;
-%     b_nd = par.l2;
-%     a_nd = 1-b_nd;
+     h_nd = par.h;
+     b_nd = par.l2;
+     a_nd = 1-b_nd;
 %     syms ax 
 %     f3(ax) = (1/(b_nd - h_nd*(ax))*ax/(par.mu_dynamic))^2 -1;
 %     f4(ax) = a_nd + h_nd*ax;
 %     solve([f3(ax) <1,f4(ax) >0],ax)
     a_dec(id) = - Fb/par.m;
+    a_dec(id) = -par.l2/par.c_h*par.g;
+    if (1/(b_nd - h_nd*(-par.l2/par.c_h))*(-par.l2/par.c_h)/(par.mu_dynamic))^2 -1 >= 0
+        fprintf('Does not satisfy first inequality')
+    end 
     %a_dec(id) = -1.0*par.g;
     v_dec(id-1) = sqrt((v_dec(id))^2 - 2*a_dec(id)*par.ds);
     v_dec(id-1) = min(v_dec(id-1),v_acc(id-1));
