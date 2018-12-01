@@ -8,8 +8,8 @@ global ds
 par = parameters();
 track_n = 'Straight';
 n_lap = 1;
-ds=0.1;
-load([track_n,'_track_ds_',num2str(ds),'.mat']);
+par.ds = 0.1;
+load([track_n,'_track_ds_',num2str(par.ds),'.mat']);
 
 % Load bike constants
 %run bike_constants.m
@@ -22,7 +22,7 @@ toc
 ix = find(v_dec>100/3.6); 
 
 % Compute necessary times
-t = ds./v_dec(2:end); 
+t = par.ds./v_dec(2:end); 
 
 % Total time for 0 to 100
 t1 = cumsum(t(1:ix));

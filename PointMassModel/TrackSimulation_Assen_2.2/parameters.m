@@ -1,15 +1,17 @@
 function [par] = parameters()
 %%% Track parameters
-par.ds = 0.1;
+par.ds = 1;
 
 %%% Bike measurements %%%
-par.m=300;                 % Mass of the motorcycle with the rider 310, without 250 [kg]
+par.m=290;                 % Mass of the motorcycle with the rider 310, without 250 [kg]
 par.g=9.81;                % Gravitational constant [ms-2]
 par.b = 1.4;               % Wheelbase [m] 
-par.h = 0.375*par.b;       % Height COG [m] -> temporary approx based on Foalte/Cossalter
+par.c_h = 0.3;            % Coefficient COG height
+par.h = par.c_h*par.b;     % Height COG [m] -> temporary approx based on Foalte/Cossalter
 par.d = 2.02;              % Circumference wheel
-par.l1 = 0.464;            % Length for weight distribution front [N]
-par.l2 = 0.536;            % Length for weight distribution back  [N]
+par.l1 = 0.6;            % Coefficient for weight distribution front [N]
+par.l2 = 1-par.l1;         % Coefficient for weight distribution back  [N]
+par.t  = 0.4;              % Thickness of the body
 
 %%% Constants for friction force based on Hoerner %%%
 par.a1 = 0.005;
@@ -30,16 +32,16 @@ par.Cl=0.12;                % Lift force coefficient mulitlied by frontal area =
 
 %%% Driving force %%%
 par.mu_static=1;            % Static friction coefficient for rear tire
-par.mu_dynamic=0.85;         % Dynamic friction coefficient for rear tire 0.85
+par.mu_dynamic=1.1;         % Dynamic friction coefficient for rear tire 0.85
+par.Tm = 240;               % Continuous driving torque
 
 %%% Power %%%
 %P=110;                     % Max power of the motor [kW]
-par.gear_ratio = 17/41;     % gear ratio (between motor and sprochet) - 17/41
+par.gear_ratio = 17/61;     % gear ratio (between motor and sprochet) - 17/41
 
 %%% Radia %%%
 par.Rw = 0.3;               % Wheel radius
-par.Rm = 0.0435;            % Motor shaft radius
-par.Rs = 0.11;              % Sprochet radius
+
 
 
 

@@ -14,7 +14,7 @@ clear all
 par = parameters(); 
 
 %% Ask for input: track, number of laps, discretization step. Load track
-track = 'At which track do you want to simulate the race? [Assen,Straight]';
+track = 'At which track do you want to simulate the race? [Assen,Assen_optimal, Assen_middle,Straight]';
 track_n = input(track);
 %track_n = 'Straight'; %'Assen';
 track_n = cellstr(track_n);
@@ -23,7 +23,9 @@ n_lap = input(laps);
 ds = par.ds;
 
 if strcmp(track_n{1}, 'Straight') 
-    load([track_n{1},'_track_ds_',num2str(par.ds),'.mat']);
+    %load([track_n{1},'_track_ds_',num2str(par.ds),'.mat']);
+    %load('Assen_straight_1.mat');
+    load('Assen_straight_corner');
 elseif strcmp(track_n{1}, 'Assen')
     load([track_n{1},'track_ds_',num2str(ds),'.mat']);
 	curv3 = curv;
@@ -54,7 +56,11 @@ dis_temp = [dist];
 for i=2:n_lap
     dis_temp = [dis_temp dist(2:end)];
 end
-dist = cumsum(dis_temp);
+if strcmp(track_n{1}, 'Straight') 
+    dist = dis_temp;
+else 
+    dist = cumsum(dis_temp);
+end
 
 curv4 = temp_curv4;
 
@@ -62,6 +68,9 @@ curv4 = temp_curv4;
 tic;
 [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(curv4,par);
 toc
+curv = curv3.*(abs(curv3)>1e-15);
+a_y = v_dec.^2./(1./abs(curv3));
+roll = atan(a_y./par.g);
 
 %% Computing total required energy and RPM
 E_d = W./(3600*1000);               % Energy per distance step
