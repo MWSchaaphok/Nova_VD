@@ -19,8 +19,6 @@ Iff_strxz = 0;   % kg*m^2.
 Iff_sus = [Iff_stry 0 Iff_strxz;
            0 Iff_stry 0;
            Iff_strxz 0 Iff_strz*0.1]*0.2 ;
-% Inertia matrix for the rear suspension
-Iff_rear_sus = [Iff_stry 0 Iff_strxz;0 Iff_stry 0;Iff_strxz 0 Iff_strz*0.1]*0.2 ;
 % Inertia parameters for the main frame
 Imnx = 6.9;      % kg*m^2. 
 Imny = 34.1;     % kg*m^2.
@@ -32,23 +30,19 @@ Imn = [Imnx+5 0 Imnxz;0 Imny 0;Imnxz 0 Imnz+5]*0.68 ;
 Iff_str = [Iff_stry 0 Iff_strxz;
            0 Iff_stry 0;
            Iff_strxz 0 Iff_strz*0.1]*0.25 ;
-% Inertia parameters for the rider
+% Inertia matrix for the rider
 Iubrx = 1.3;     % kg*m^2.
 Iubry = 2.1;     % kg*m^2.
 Iubrz = 1.4;     % kg*m^2.
 Iubrxz = 0.3;    % kg*m^2.
-% Inertia matrix for the rider
+% Inertia matrix for the front steer body
 Iubr = [Iubrx 0 Iubrxz;0 Iubry 0;Iubrxz 0 Iubrz] ;
-% Inertia parameters for the front wheel and rear wheel
 Ifwx = 0.3 ;     % kg*m^2.
 Ifwy  = 0.58;    % kg*m^2.
 Ifwz = 0.3 ;     % kg*m^2.
 Irwx = 0.38 ;    % kg*m^2.
 Irwy = 0.74;     % kg*m^2.
 Irwz = 0.38 ;    % kg*m^2.
-% Inertia matrix for the front wheel and rear wheel
-Ifw = [Ifwx 0 0;0 Ifwy 0;0 0 Ifwz] ;
-Irw = [Irwx 0 0;0 Irwy 0;0 0 Irwz] ;
 
 % Geometric parameters.
 x1  =  0.770;   % m
@@ -79,8 +73,8 @@ x13 =  0.000;   % m
 z13 = -0.700;   % m
 x14 =  0.100;   % m
 z14 = -0.330;   % m
-r_tcf = 0.049;  % m  Front camber const.
-r_tcr = 0.07;   % m  Rear camber const.
+r_tcf = 0.049;  % m
+r_tcr = 0.07;   % m 
 fwrad = 0.319;  % m  Front wheel radius
 rwrad = 0.321;  % m  Rear wheel radius
 epsilon = 0.52; %rad Steer axle inclination with the vertical
@@ -105,7 +99,8 @@ Cp_twst = 99.7;
 Kp_str = 0.0;
 Kp_sts = 1000000.0;  
 Cp_str = 7.4;  
-
+CDA = 0.312;  
+CLA = 0.114;
 
 % Tyre parameters.
 C_Mgf = 4.8;
@@ -134,10 +129,10 @@ r_sl_stf = 20000;
 f_sl_stf = 15000;
 
 % Set-defaults
-theta = 0.0; % Grade angle (gravity)
-brake = 0.0; % Brake ratio? (Not sure about this)
-satf = 4800; % Saturation force of the tire
-v_ini = 30.0; % m/s Initial velocity
+theta = 0.0; 
+brake = 0.0; 
+satf = 4800;
+v_ini = 30.0;
 
 
 % Suspension pickup points.
@@ -170,7 +165,7 @@ Pickup.p13.coordinates = eval(['[x13 0 z13]']);
 Pickup.p14.name = 'Centre of mass of swing arm'; 
 Pickup.p14.coordinates = eval(['[x14 0 z14]']);
 
-% Torque-->Inputs block
+%% Torque-->Inputs block
 inputs.del_min  = 0.05 ; % Minimum delta-steering angle
 
 % tranfer function relating [input] steering angle (\delta_{ref}) and
@@ -186,9 +181,7 @@ inputs.engine_a2 = 0 ;
 inputs.engine_b1 = 750 ;
 inputs.engine_b2 = 0 ;
 
-% Aerodynamics block
-CDA = 0.312;  
-CLA = 0.114;
+%% Aerodynamics block
 Aero.Drag = -0.5*1.227*CDA ;
 Aero.Lift = -0.5*1.227*CLA ;
 %% Relationship between applied and obtained acceleration
