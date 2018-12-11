@@ -85,7 +85,7 @@ for id = size(v_dec,2):-1:2
 
     Fb = par.mu_dynamic*Nf;                                     % Compute maximuma allowed brake force to prevent slipping
     a_dec(id) = - Fb/par.m;
-    a_dec(id) = -1.0*par.g;
+    %a_dec(id) = -1.0*par.g;
     v_dec(id-1) = sqrt((v_dec(id))^2 - 2*a_dec(id)*par.ds);
     v_dec(id-1) = min(v_dec(id-1),v_acc(id-1));
     

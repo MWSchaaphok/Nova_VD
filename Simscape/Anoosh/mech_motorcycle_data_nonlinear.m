@@ -10,35 +10,44 @@ Mfw = 25.6;      % kg.  Mass of the front wheel
 Mrw = 25.6;      % kg.  Mass of the rear wheel
 Mubr = 44.5;     % kg.  Mass of the rider
 Mswg_arm = 0;    % kg.  Mass of the swingarm
+
 % Inertia parameters for the front suspension
 Iff_strx = 0.8;  % kg*m^2. 
 Iff_stry = 1.2;  % kg*m^2. 
 Iff_strz = 0.5;  % kg*m^2. 
 Iff_strxz = 0;   % kg*m^2. 
+
 % Inertia matrix for the front suspension
 Iff_sus = [Iff_stry 0 Iff_strxz;
            0 Iff_stry 0;
            Iff_strxz 0 Iff_strz*0.1]*0.2 ;
+       
 % Inertia matrix for the rear suspension
 Iff_rear_sus = [Iff_stry 0 Iff_strxz;0 Iff_stry 0;Iff_strxz 0 Iff_strz*0.1]*0.2 ;
+
 % Inertia parameters for the main frame
 Imnx = 6.9;      % kg*m^2. 
 Imny = 34.1;     % kg*m^2.
 Imnz = 21.1;     % kg*m^2.
 Imnxz  = 1.7;    % kg*m^2.
+
 % Inertia matrix for the main frame
 Imn = [Imnx+5 0 Imnxz;0 Imny 0;Imnxz 0 Imnz+5]*0.68 ;
+
 % Inertia matrix for the front steer body
 Iff_str = [Iff_stry 0 Iff_strxz;
            0 Iff_stry 0;
            Iff_strxz 0 Iff_strz*0.1]*0.25 ;
+       
 % Inertia parameters for the rider
 Iubrx = 1.3;     % kg*m^2.
 Iubry = 2.1;     % kg*m^2.
 Iubrz = 1.4;     % kg*m^2.
 Iubrxz = 0.3;    % kg*m^2.
+
 % Inertia matrix for the rider
 Iubr = [Iubrx 0 Iubrxz;0 Iubry 0;Iubrxz 0 Iubrz] ;
+
 % Inertia parameters for the front wheel and rear wheel
 Ifwx = 0.3 ;     % kg*m^2.
 Ifwy  = 0.58;    % kg*m^2.
@@ -46,6 +55,7 @@ Ifwz = 0.3 ;     % kg*m^2.
 Irwx = 0.38 ;    % kg*m^2.
 Irwy = 0.74;     % kg*m^2.
 Irwz = 0.38 ;    % kg*m^2.
+
 % Inertia matrix for the front wheel and rear wheel
 Ifw = [Ifwx 0 0;0 Ifwy 0;0 0 Ifwz] ;
 Irw = [Irwx 0 0;0 Irwy 0;0 0 Irwz] ;
@@ -198,3 +208,5 @@ plot(x,y,'-*')
 xlabel('Applied acc [-]')
 ylabel('Obtained acc. [m/s^2]')
 grid on
+
+%% Relationship between applied and obtained steering

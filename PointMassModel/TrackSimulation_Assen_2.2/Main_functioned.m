@@ -61,7 +61,7 @@ if strcmp(track_n{1}, 'Straight')
 else 
     dist = cumsum(dis_temp);
 end
-
+curv3 = temp_curv4;
 curv4 = temp_curv4;
 
 %% Compute acceleration and velocity profile based on Forward Backward Pass method.
