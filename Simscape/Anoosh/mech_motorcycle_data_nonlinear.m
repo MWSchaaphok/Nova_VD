@@ -93,7 +93,7 @@ r_tcf = 0.049;  % m  Front camber const.
 r_tcr = 0.07;   % m  Rear camber const.
 fwrad = 0.319;  % m  Front wheel radius
 rwrad = 0.321;  % m  Rear wheel radius
-epsilon = 0.52; %rad Steer axle inclination with the vertical
+epsilon = 0.52; %rad Steer axle inclination with the vertical (Rake angle)
 
 % Suspension parameters.
 r_sprld0 = 1540.0;  
@@ -145,7 +145,7 @@ f_sl_stf = 15000;
 
 % Set-defaults
 theta = 0.0; % Grade angle (gravity)
-brake = 0.0; % Brake ratio? (Not sure about this)
+brake = 0.0; % Brake ratio 
 satf = 4800; % Saturation force of the tire
 v_ini = 30.0; % m/s Initial velocity
 
@@ -201,11 +201,15 @@ CDA = 0.312;
 CLA = 0.114;
 Aero.Drag = -0.5*1.227*CDA ;
 Aero.Lift = -0.5*1.227*CLA ;
+
+% Rear brake block
+speedcontrol.const = -80 ; % Default at -80 
+% The Body decelerates on changing this to zero.
 %% Relationship between applied and obtained acceleration
-x = -1:0.25:1 ;                                         % applied acc.
+x = -1:0.25:1 ;                                         % applied throttle
 y = [-18.42;-13.63;-8.5;-3.895;0.59;1.47;2.35;3.22;4] ; % obtained acc.
 plot(x,y,'-*')
-xlabel('Applied acc [-]')
+xlabel('Applied throttle [-]')
 ylabel('Obtained acc. [m/s^2]')
 grid on
 
