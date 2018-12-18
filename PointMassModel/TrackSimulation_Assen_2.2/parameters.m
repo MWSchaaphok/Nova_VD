@@ -5,13 +5,13 @@ par.ds = 1;
 %%% Bike measurements %%%
 par.m=290;                 % Mass of the motorcycle with the rider 310, without 250 [kg]
 par.g=9.81;                % Gravitational constant [ms-2]
-par.b = 2;               % Wheelbase [m] 
-par.c_h = 0.4;             % Coefficient COG height
+par.b = 1.4;               % Wheelbase [m] 
+par.c_h = 0.3;             % Coefficient COG height
 par.h = par.c_h*par.b;     % Height COG [m] -> temporary approx based on Foalte/Cossalter
 par.d = 2.02;              % Circumference wheel
-par.l1 = 0.47;             % Coefficient for weight distribution front [N]
+par.l1 = 0.48;             % Coefficient for weight distribution front [N]
 par.l2 = 1-par.l1;         % Coefficient for weight distribution back  [N]
-par.t  = 0.3;              % Thickness of the body
+par.t  = 0.4;              % Thickness of the body
 
 %%% Constants for friction force based on Hoerner %%%
 par.a1 = 0.005;
@@ -32,7 +32,7 @@ par.Cl=0.12;                % Lift force coefficient mulitlied by frontal area =
 
 %%% Driving force %%%
 par.mu_static=1;            % Static friction coefficient for rear tire
-par.mu_dynamic=1.2;         % Dynamic friction coefficient for rear tire 0.85
+par.mu_dynamic=1.1;         % Dynamic friction coefficient for rear tire 0.85
 par.Tm = 260;               % Continuous driving torque
 
 %%% Power %%%
