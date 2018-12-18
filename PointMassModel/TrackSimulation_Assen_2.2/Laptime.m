@@ -1,4 +1,4 @@
-function [lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par)
+function [tc,lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par)
 
 %% Function description
 %  This function computes the total and individual laptime from the velocity profile, 
