@@ -69,9 +69,9 @@ tic;
 [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(curv4,par);
 toc
 curv = curv3.*(abs(curv3)>1e-15);
-a_y = v_dec.^2./(1./abs(curv3));
-roll = atan(a_y./par.g);
-
+a_y = v_dec.^2./(1./curv3);
+roll = atand(a_y./par.g);                               % Roll angle in degrees (simple approx)
+steer = atand(par.b.*curv);                             % Steering angle in degrees (simple approx)
 %% Computing total required energy and RPM
 E_d = W./(3600*1000);               % Energy per distance step
 E_cum = cumsum(E_d);                % Cumulative sum of energy
@@ -134,7 +134,7 @@ hold all
 end
 
 %% Computation and plot Lap times
-[lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par);
+[t,lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par);
 ax = subplot(3, 2, 5);
 text(0.5,0.5,lapstr);
 set ( ax, 'visible', 'off')
@@ -152,3 +152,6 @@ set ( ax, 'visible', 'off')
  colormap jet
  colorbar
  axis equal
+ 
+ %% Save for connection to simulink model 
+ save(['Simple Acc,Steering input',track_n{1},'with brake'],'steer','a','t','dist') 
