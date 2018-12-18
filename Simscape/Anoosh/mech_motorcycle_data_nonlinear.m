@@ -205,7 +205,8 @@ Aero.Lift = -0.5*1.227*CLA ;
 % Rear brake block
 speedcontrol.const = -80 ; % Default at -80 
 % The Body decelerates on changing this to zero.
-%% Relationship between applied and obtained acceleration
+tstop = 80 ; % Simulation time
+%% Relationship between throttle and obtained acceleration
 x = -1:0.25:1 ;                                         % applied throttle
 y = [-18.42;-13.63;-8.5;-3.895;0.59;1.47;2.35;3.22;4] ; % obtained acc.
 plot(x,y,'-*')
@@ -214,3 +215,12 @@ ylabel('Obtained acc. [m/s^2]')
 grid on
 
 %% Relationship between applied and obtained steering
+%% Test-1: Throttle and Acceleration
+load('Data\Simple Acc,Steering inputStraightwith brake.mat')
+tstop = t(end) ;
+a2 = interp1(y,x,a) ;
+v_ini = 0 ;
+%%
+plot(a2,a,'-o')
+hold on
+plot(x,y,'-*')
