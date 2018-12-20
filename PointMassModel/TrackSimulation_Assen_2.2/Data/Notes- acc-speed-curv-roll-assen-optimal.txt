@@ -1,0 +1,21 @@
+Notes data 'Acc,speed,curv,roll Assen_optimal' 
+By: Marianne Schaaphok
+Date: 18-12-2018
+
+This dataset contains the acceleration profile [ms^-2], speed profile [m/s], curvature[1/m] for Assen (handmade optimal raceline) and a simple approximation
+of the roll [degrees] of the motorcycle for the first lap of Assen. 
+
+- Initial speed 0 m/s. 
+- Maximum acceleration calculated based on forces (drive force, aerodynamic force, friction/rolling forces) and limited by wheelie conditions. 
+- Maximum deceleration set constant to -1g
+- Assumed bike mass = 280 kg (incl. rider), wheelbase = 1.45, CG (0.48*wheelbase, 0.38*wheelbase (height)
+- Tire friction coefficient = 1.1
+- Continuous driving torque = 260 and gear ratio 1/2.5. 
+- Roll is simple approximation based on the lateral acceleration and we are not sure on its accuracy 
+
+- Total Laptime = 118.9 s
+
+Warnings:
+- Data will not be completely accurate 
+- For now we don't know in which bounds the accuracy is. 
+- 

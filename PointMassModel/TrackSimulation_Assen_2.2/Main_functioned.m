@@ -154,4 +154,5 @@ set ( ax, 'visible', 'off')
  axis equal
  
  %% Save for connection to simulink model 
- save(['Simple Acc,Steering input',track_n{1},'with brake'],'steer','a','t','dist') 
+ %save(['Simple Acc,Steering input',track_n{1},'with brake'],'steer','a','t','dist') 
+ save(['Acc,speed,curv,roll',track_n{1}],'a','dist','curv4','v_dec','roll');

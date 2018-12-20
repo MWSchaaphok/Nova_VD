@@ -3,10 +3,10 @@ function [par] = parameters()
 par.ds = 1;
 
 %%% Bike measurements %%%
-par.m=290;                 % Mass of the motorcycle with the rider 310, without 250 [kg]
+par.m=290;                 % Mass of the motorcycle with the rider 310, without 230 [kg]
 par.g=9.81;                % Gravitational constant [ms-2]
-par.b = 1.4;               % Wheelbase [m] 
-par.c_h = 0.3;             % Coefficient COG height
+par.b = 1.45;               % Wheelbase [m] 
+par.c_h = 0.38;             % Coefficient COG height
 par.h = par.c_h*par.b;     % Height COG [m] -> temporary approx based on Foalte/Cossalter
 par.d = 2.02;              % Circumference wheel
 par.l1 = 0.48;             % Coefficient for weight distribution front [N]

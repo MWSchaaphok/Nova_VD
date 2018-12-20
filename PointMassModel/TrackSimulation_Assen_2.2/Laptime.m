@@ -32,6 +32,7 @@ for idx = 2:n_lap
       size(t_lap)
       tc2 =cumsum(t_lap);
       size(tc2)
+      idx
       lapt(idx) = tc2(end);
      sprintf('Lap Time for lap %d = %d s', idx, lapt(idx)) 
      lapstr = [lapstr newline ['Lap Time for lap ' num2str(idx) ' = ' num2str(lapt(idx)) ' s']];

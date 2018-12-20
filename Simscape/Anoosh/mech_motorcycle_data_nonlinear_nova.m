@@ -63,93 +63,96 @@ Ifw = [Ifwx 0 0;0 Ifwy 0;0 0 Ifwz] ;
 Irw = [Irwx 0 0;0 Irwy 0;0 0 Irwz] ;
 
 % Geometric parameters.
-x1  =  0.770;   % m
-z1  = -0.582;   % m
-x2  =  1.168;   % m
-z2  = -0.834;   % m
-x3  =  1.165;   % m
-z3  = -0.869;   % m
-x4  =  1.225;   % m
-z4  = -0.867;   % m
-x5  =  1.539;   % m
-z5  = -0.318;   % m
-x6  =  1.539;   % m
-z6  = -0.318;   % m
-x7  =  0.000;   % m
-z7  = -0.321;   % m
-x8  =  0.680;   % m
-z8  = -0.532;   % m
-x9  =  0.600;   % m
-z9  = -1.000;   % m
-x10 =  0.600;   % m
-z10 = -1.190;   % m
-x11 =  0.400;   % m
-z11 = -0.321;   % m
-x12 =  0.000;   % m
-z12 = -0.330;   % m
-x13 =  0.000;   % m
-z13 = -0.700;   % m
-x14 =  0.100;   % m
-z14 = -0.330;   % m
-r_tcf = 0.049;  % m  Front camber const.
-r_tcr = 0.07;   % m  Rear camber const.
-fwrad = 0.30;  % m  Front wheel radius (updated)
-rwrad = 0.33;  % m  Rear wheel radius (updated)
-epsilon = 0.8378; % rad Steer axle inclination with the vertical (Rake angle) - 24 degrees (updated)
+x1  =  0.770;   % [m] p1,  aerodynamic center of pressure
+z1  = -0.582;   % [m] p1,  aerodynamic center of pressure
+x2  =  1.168;   % [m] p2,  joint twist axis - rear frame
+z2  = -0.834;   % [m] p2,  joint twist axis - rear frame
+x3  =  1.165;   % [m] p3,  COM front frame steer body
+z3  = -0.869;   % [m] p3,  COM front frame steer body
+x4  =  1.225;   % [m] p4,  joint front frame and steer body
+z4  = -0.867;   % [m] p4,  joint front frame and steer body
+x5  =  1.539;   % [m] p5,  COM front suspension body
+z5  = -0.318;   % [m] p5,  COM front suspension body
+x6  =  1.539;   % [m] p6,  Front wheel attachment point
+z6  = -0.318;   % [m] p6,  Front wheel attachment point
+x7  =  0.000;   % [m] p7,  Rear wheel center point
+z7  = -0.321;   % [m] p7,  Rear wheel center point
+x8  =  0.680;   % [m] p8,  COM main frame
+z8  = -0.532;   % [m] p8,  COM main frame
+x9  =  0.600;   % [m] p9,  attachment point for rider on rear frame
+z9  = -1.000;   % [m] p9,  attachment point for rider on rear frame
+x10 =  0.600;   % [m] p10, COM upper body rider
+z10 = -1.190;   % [m] p10, COM upper body rider
+x11 =  0.400;   % [m] p11, joint swingarm - main frame
+z11 = -0.321;   % [m] p11, joint swingarm - mian frame
+x12 =  0.000;   % [m] p12, attachment point rear spring on bottom link
+z12 = -0.330;   % [m] p12, attachmetn point rear spring on bottom link
+x13 =  0.000;   % [m] p13, attachment point swingarm - main frame
+z13 = -0.700;   % [m] p13, attachment point swingarm - main frame
+x14 =  0.100;   % [m] p14, COM swingarm
+z14 = -0.330;   % [m] p14, COM swingarm
+r_tcf = 0.049;  % [m]      Front camber const.
+r_tcr = 0.07;   % [m]      Rear camber const.
+fwrad = 0.30;   % [m]      Front wheel radius (updated)
+rwrad = 0.33;   % [m]      Rear wheel radius (updated)
+epsilon = 0.8378; % rad    Steer axle inclination with the vertical (Rake angle) - 24 degrees (updated)
 
 % Suspension parameters.
-r_sprld0 = 1540.0;  
-f_sprld0 = 940.0;  
-Ksf = 9000.0;  
-Csf = 550.0;  
-Ksr = 25700.0;
-Csr = 1100.0; 
-Ktf = 115000.0;  
-Ktr = 170000.0;  
-fw_ld0 = 1250.0;  
-rw_ld0 = 1792.0;
+r_sprld0 = 1540.0;       % Nominal rear spring load 
+f_sprld0 = 940.0;        % Nominal front spring load 
+Ksf = 9000.0;            % Stiffness suspension front
+Csf = 550.0;             % Damping suspension front
+Ksr = 25700.0;           % Stiffness suspension rear
+Csr = 1100.0;            % Damping suspension rear
+Ktf = 115000.0;          % Stiffness tire front 
+Ktr = 170000.0;          % Stiffness tire rear  
+fw_ld0 = 1250.0;         % Static load front wheel (without driver?) 
+rw_ld0 = 1792.0;         % Static load rear wheel (without driver?)
 
 % Stiffness and damping parameters.
-Kp_ubr = 10000.0;
-Cp_ubr = 85.2;  
-Kp_twst = 34100.0;  
-Cp_twst = 99.7;  
-Kp_str = 0.0;
-Kp_sts = 1000000.0;  
-Cp_str = 7.4;  
+Kp_ubr = 10000.0;        % Stiffness rider upper body
+Cp_ubr = 85.2;           % Damping rider upper body = 2*factor*sqrt(Kp,m)
+Kp_twst = 34100.0;       % Stiffness frame twist 
+Cp_twst = 99.7;          % Damping frame twist
+Kp_str = 0.0;            % Stiffness steering system
+%Kp_sts = 1000000.0;     % No idea, but doesn't seem to be used
+Cp_str = 7.4;            % Damping steering system
 
 
 % Tyre parameters.
-C_Mgf = 4.8;
-C_Mgr = 7.9;
-C_Faf = 1.85e4;
-C_Far = 2.58e4;
-C_Fgf = 1.71e3;
-C_Fgr = 2.80e3;
-p_agf = 0.46;  
-p_agr = 0.4;
-p_ggf = 0.36;  
-p_ggr = 0.5;  
-q_aaf = 10.1;  
-q_aar = 10.1; 
-q_ggf = 5.1;  
-q_ggr = 5.1;
-t_pf = 0.03; 
-t_pr = 0.03;  
-n_af = 14;  
-n_ar = 1.9;  
-n_gf = 1.3; 
-n_gr = 1.69;
-sigma_fyr = 0.25;  
-sigma_fyf = 0.25;  
-r_sl_stf = 20000;  
-f_sl_stf = 15000;
+% From tire model used in "The dynamic behaviour of a motorcycle when
+% running straight ahead and when cornerning" by C. Koenen
+
+C_Mgf = 4.8;             % Coefficient camber aligning moment front
+C_Mgr = 7.9;             % Coefficient camber aligning moment rear
+C_Faf = 1.85e4;          % Coefficient side slip stiffness (dFy/dalpha)front 
+C_Far = 2.58e4;          % Coefficient side slip stiffness (dFy/dalpha)rear
+C_Fgf = 1.71e3;          % Coefficient lateral camber force with relaxation
+C_Fgr = 2.80e3;          % Coefficient lateral camber force with relaxation
+p_agf = 0.46;            % Coefficient side force and slip angle (common expression)
+p_agr = 0.4;             % Coefficient side force and slip angle (common expression)
+p_ggf = 0.36;            % Coefficient side force and camber angle (lat. camber force)
+p_ggr = 0.5;             % Coefficient side force and camber angle (lat. camber force)
+q_aaf = 10.1;            % Coefficient aligning moment with relaxation
+q_aar = 10.1;            % Coefficient aligning moment with relaxation
+q_ggf = 5.1;             % Coefficient camber aligning moment 
+q_ggr = 5.1;             % Coefficient camber aligning moment
+t_pf = 0.03;             % Pneumatic trail front
+t_pr = 0.03;             % Pneumatic trail rear
+n_af = 14;               % Load dependency coefficient due to side slip front
+n_ar = 1.9;              % Load dependency coefficient due to side slip rear
+n_gf = 1.3;              % Load dependency coefficient due to camber front
+n_gr = 1.69;             % Load dependency coefficient due to camber rear
+sigma_fyr = 0.25;        % Tire relaxation length rear
+sigma_fyf = 0.25;        % Tire relaxation length front 
+%r_sl_stf = 20000;       % Doesn't seem to be used in the model 
+%f_sl_stf = 15000;       % Doesn't seem to be used in the model 
 
 % Set-defaults
-theta = 0.0; % Grade angle (gravity)
-brake = 0.0; % Brake ratio 
-satf = 4800; % Saturation force of the tire
-v_ini = 30.0; % m/s Initial velocity
+theta = 0.0;             % [deg] Grade angle (gravity)
+brake = 0.0;             % Brake ratio 
+satf = 4800;             % [N]   Saturation force of the tire
+v_ini = 30.0;            % [m/s] Initial velocity
 
 
 % Suspension pickup points.
@@ -183,7 +186,7 @@ Pickup.p14.name = 'Centre of mass of swing arm';
 Pickup.p14.coordinates = eval(['[x14 0 z14]']);
 
 % Torque-->Inputs block
-inputs.del_min  = 0.05 ; % Minimum delta-steering angle
+inputs.del_min  = 0.05 ;    % Minimum delta-steering angle
 
 % tranfer function relating [input] steering angle (\delta_{ref}) and
 % [output] steering torque
@@ -192,20 +195,23 @@ inputs.del_tf_den = [1 5] ;
 
 % Engine parameters
 % Engine = min(-inputs.engine_a1*acc, inputs.engine_a2) +
-%                max(-inputs.engine_b1*acc, -inputs.engine_b2) ;
+%                max(-inputs.engine_b1*acc, inputs.engine_b2) ;
 inputs.engine_a1 = 150 ;
 inputs.engine_a2 = 0 ;
 inputs.engine_b1 = 750 ;
 inputs.engine_b2 = 0 ;
 
 % Aerodynamics block
-CDA = 0.312;  
-CLA = 0.114;
-Aero.Drag = -0.5*1.227*CDA ;
-Aero.Lift = -0.5*1.227*CLA ;
+A   = 0.36;                     % Frontal area of the bike incl rider
+Cd  = 0.88;                     % Aerdynamic drag coefficient 
+CDA = A*Cd;                     % Aerodynamic drag constant 
+CLA = 0.114;                    % Aerodynamic lift constant = (Cl*A) 
+Aero.Drag = -0.5*1.227*CDA ;    % Is multiplied with v^2 in simulink model 
+Aero.Lift = -0.5*1.227*CLA ;    % Is multiplied with v^2 in simulink model 
 
 % Rear brake block
-speedcontrol.const = -80 ; % Default at -80 
+speedcontrol.const = -80 ; % Default at -80
+
 % The Body decelerates on changing this to zero.
 tstop = 80 ; % Simulation time
 %% Relationship between throttle and obtained acceleration
@@ -217,12 +223,14 @@ ylabel('Obtained acc. [m/s^2]')
 grid on
 
 %% Relationship between applied and obtained steering
+
+
 %% Test-1: Throttle and Acceleration
-load('Data\Simple Acc,Steering inputStraightwith brake.mat')
-tstop = t(end) ;
-a2 = interp1(y,x,a) ;
-v_ini = 0 ;
+%load('Data\Simple Acc,Steering inputStraightwith brake.mat')
+%tstop = t(end) ;
+%a2 = interp1(y,x,a) ;
+%v_ini = 0 ;
 %%
-plot(a2,a,'-o')
-hold on
-plot(x,y,'-*')
+%plot(a2,a,'-o')
+%hold on
+%plot(x,y,'-*')
