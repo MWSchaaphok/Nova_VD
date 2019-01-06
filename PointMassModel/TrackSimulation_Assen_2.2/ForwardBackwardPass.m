@@ -1,4 +1,4 @@
-function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(curv4,par)
+function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(d_dis,curv4,par)
 
 %% Velocity profile phase 1 
 
@@ -16,7 +16,7 @@ a_acc = zeros(size(v_max'));                         % acceleration
 rpm_m = zeros(size(v_max'));                         % Rpm motor
 P_out = zeros(size(v_max'));
 W     = zeros(size(v_max'));
-%v_acc(1) = 15.61;
+v_acc(1) = 51.12;
 for idx = 2:size(v_max,2)
     Wf    = a_acc(idx-1)*par.h/par.b*par.m;                         % Weight shift to front tire [N]
     
@@ -51,18 +51,19 @@ for idx = 2:size(v_max,2)
     
     a_acc(idx) = sf/par.m;                                          % Define acceleration
     %a_acc(idx) = 1.2*par.g;
-    v_acc_temp(idx) = sqrt((v_acc(idx-1))^2 + 2*a_acc(idx)*par.ds); % Define achievable velocity
+    v_acc_temp(idx) = sqrt((v_acc(idx-1))^2 + 2*a_acc(idx)*d_dis(idx)); % Define achievable velocity
 
     v_acc(idx) = min(v_acc_temp(idx),v_max(idx));                   % Restrict velocity at corners   
     
     % Energy calculations
     F_e = sf + Fd + Ffr + Fff;                                      % Force for energy calculations
     F_c = Fd+Ffr+Fff; 
-    W1(idx) = F_e* par.ds;                                          % Compute Work. 
-    W2(idx) = F_c*par.ds;
+    W1(idx) = F_e* d_dis(idx);                                          % Compute Work. 
+    W2(idx) = F_c*d_dis(idx);
 end
 W = ((v_acc_temp == v_acc).*W1 + (v_acc == v_max).*W2);
 size(W)
+
 %% iii. Backward Pass
 v_dec = ones(size(v_acc))*v_acc(end);
 %a_dec = -0.8*g;

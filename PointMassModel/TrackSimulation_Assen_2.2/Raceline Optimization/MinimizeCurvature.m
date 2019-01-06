@@ -7,10 +7,7 @@ if size(tc) ~= size(path.dist)
 end 
 
 %% Build matrices
-% A = [];
-% for i = 2:size(tc,2)
-%    A = blkdiag(A, matrixA(i,par,v));
-% end
+
 Cf = 160*ones(size(v));
 Cr = 180*ones(size(v));
 Fyf = 100*ones(size(v));
@@ -18,41 +15,41 @@ Fyr = 100*ones(size(v));
 a2f = 2*ones(size(v));
 a2r = 2*ones(size(v));
 Iz = 2250; 
-B = [];
+
 a = par.l1*par.b;
 b = par.b-a; 
-% for i = 2:size(tc,2)
-%     B = [B;0;0;(a*Cf(i))/Iz; Cf(i)/(par.m*v(i)); 0];
-% end
 
-d = [];
-for i = 2:size(tc,2)
-    d = [d; 0; -path.curv(i)*v(i); (a*Cf(i)*a2f(i) - b*Cr(i)*a2r(i) + a*Fyf(i)-b*Fyr(i))/Iz;...
-         (Cf(i)*a2f(i) + Cr(i)*a2r(i) + Fyf(i) + Fyr(i))/(par.m*v(i)); 0];
-end 
 
 %% CVX Optimization routine 
 lambda = 1;                        % Regularization parameter to ensure smooth steering 
 cvx_begin
     % Define variables 
-    variable x(5*n) 
+    variable x(5,n) 
     variable delta(5*n)
 
     % Objective function
     minimize( sum((diff(x(5,:))./diff(path.dist)).^2 + lambda*(diff(delta).^2)))
     subject to 
-        [x(6:(n-1)*5); x(1:10)] == A*x + B.*delta +d;
-        x(1:5) == x(end-5:end);
-        for k = 1:n
-        path.wout(k) <= x(k) <= path.win(k);
-        end
-    % Constraints for each x_k sepearte 
-    %  for k = 1:n-1
-%             x(:,k+1) = A(:,:,k)*x(:,k) + B(:,k)*delta(k) + d(:,k);
-%             path.wout(k) <=x(1,k) <= path.win(k);
-%       end
-%       x(:,1) = A(:,:,n)*x(:,n) + B(:,n)*delta(n) + d(:,n);
-%       x(:,1) == x(:,end);
+%         [x(6:(n-1)*5); x(1:10)] == A*x + B.*delta +d;
+%         x(1:5) == x(end-5:end);
+%         for k = 1:n
+%         path.wout(k) <= x(k) <= path.win(k);
+%         end
+%    Constraints for each x_k sepearte 
+         for k = 1:n-1
+             A = [0 v(k) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(k) + b^2*Cr(k))/(v(k)*Iz) (a*Cf(k) - b*Cr(k))/(Iz) 0 ; ...
+                 0 0 (a*Cf(k) - b*Cr(k))/(m*v(k))-1 (Cf(k) + Cr(k))/(m*v(k)) 0 ; 0 0 1 0 0 ];
+             B = [ 0;0;-a*Cf(k)/Iz; -Cf(k)/(m*v(k)); 0 ];
+             d = [0 ; -K(k)*v(k) ; 0 ; 0 ; 0]; 
+             x(:,k+1) = A*x(:,k) + B*delta(k) + d;
+             path.wout(k) <=x(1,k) <= path.win(k);
+         end
+          A = [0 v(n) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(n) + b^2*Cr(n))/(v(n)*Iz) (a*Cf(n) - b*Cr(n))/(Iz) 0 ; ...
+               0 0 (a*Cf(n) - b*Cr(n))/(m*v(n))-1 (Cf(n) + Cr(n))/(m*v(n)) 0 ; 0 0 1 0 0 ];
+          B = [ 0;0;-a*Cf(n)/Iz; -Cf(n)/(m*v(n)); 0 ];
+          d = [0 ; -K(n)*v(n) ; 0 ; 0 ; 0]; 
+          x(:,1) = A*x(:,n) + B*delta(n) + d;
+          %x(:,1) == x(:,end);
 cvx_end
 
 %% Update path 

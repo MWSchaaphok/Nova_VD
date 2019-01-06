@@ -3,7 +3,7 @@ function [t, path, v] = GenerateTrajectory()
 %% Load bike variables 
 
 par = parameters();
-tol = 0.1 ;                 % tolerance for optimizing laptime 
+tol = 1 ;                 % tolerance for optimizing laptime 
 
 %% Ask for input: track, number of laps, discretization step. Load track
 track = 'At which track do you want to simulate the race? [Assen,Assen_optimal, Assen_middle,Straight]';
@@ -60,16 +60,16 @@ v = CalculateSpeedProfile(path,par);
 dt = 10;                            % Starting dt
 
 %% Optimization loop 
-% i=0; 
-% while abs(dt) > tol 
-%    temp_t = tc(end); 
-%    v = CalculateSpeedProfile(path,par);
-%    path = MinimizeCurvature(v,path,par,tc);
-%    [t,tc] = ComputeLapTime(v,path);
-%    dt = temp_t-tc(end); 
-%    i = i+1; 
-% end
-% fprintf("Number of iterations is " + num2str(i));
+i=0; 
+while abs(dt) > tol 
+   temp_t = tc(end); 
+   v = CalculateSpeedProfile(path,par);
+   path = MinimizeCurvature(v,path,par,tc);
+   [t,tc] = ComputeLapTime(v,path);
+   dt = temp_t-tc(end); 
+   i = i+1; 
+end
+fprintf("Number of iterations is " + num2str(i));
 
 
 end

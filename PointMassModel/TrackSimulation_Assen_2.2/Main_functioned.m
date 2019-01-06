@@ -10,8 +10,8 @@
 % ASSUMPTIONS
 
 clc
-clear all 
-par = parameters(); 
+%clear all 
+par = parameters_test(); 
 
 %% Ask for input: track, number of laps, discretization step. Load track
 track = 'At which track do you want to simulate the race? [Assen,Assen_optimal, Assen_middle,Straight]';
@@ -27,8 +27,9 @@ if strcmp(track_n{1}, 'Straight')
     %load('Assen_straight_1.mat');
     load('Assen_straight_corner');
 elseif strcmp(track_n{1}, 'Assen')
-    load([track_n{1},'track_ds_',num2str(ds),'.mat']);
-	curv3 = curv;
+    %load([track_n{1},'track_ds_',num2str(ds),'.mat']);
+	load([track_n{1},'_lap.mat']);
+    curv3 = curv;
 	curv4 = curv;
 elseif strcmp(track_n{1},'Assen_optimal')
     load([track_n{1},'track_ds_',num2str(ds),'.mat']);
@@ -56,6 +57,7 @@ dis_temp = [dist];
 for i=2:n_lap
     dis_temp = [dis_temp dist(2:end)];
 end
+d_dis = dis_temp; 
 if strcmp(track_n{1}, 'Straight') 
     dist = dis_temp;
 else 
@@ -66,7 +68,7 @@ curv4 = temp_curv4;
 
 %% Compute acceleration and velocity profile based on Forward Backward Pass method.
 tic;
-[v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(curv4,par);
+[v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(d_dis,curv3,par);
 toc
 curv = curv3.*(abs(curv3)>1e-15);
 a_y = v_dec.^2./(1./curv3);
@@ -134,7 +136,7 @@ hold all
 end
 
 %% Computation and plot Lap times
-[t,lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par);
+[t,lapt,lapstr] = Laptime2(d_dis,v_dec,curv3,curv4,n_lap,par);
 ax = subplot(3, 2, 5);
 text(0.5,0.5,lapstr);
 set ( ax, 'visible', 'off')
@@ -155,4 +157,4 @@ set ( ax, 'visible', 'off')
  
  %% Save for connection to simulink model 
  %save(['Simple Acc,Steering input',track_n{1},'with brake'],'steer','a','t','dist') 
- save(['Acc,speed,curv,roll',track_n{1}],'a','dist','curv4','v_dec','roll');
+ %save(['Acc,speed,curv,roll',track_n{1}],'a','dist','curv4','v_dec','roll');
