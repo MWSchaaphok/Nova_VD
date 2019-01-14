@@ -11,8 +11,8 @@
 
 clc
 %clear all 
-par = parameters_test(); 
-
+%par = parameters_test(); 
+par = parameters();
 %% Ask for input: track, number of laps, discretization step. Load track
 track = 'At which track do you want to simulate the race? [Assen,Assen_optimal, Assen_middle,Straight]';
 track_n = input(track);
@@ -68,7 +68,8 @@ curv4 = temp_curv4;
 
 %% Compute acceleration and velocity profile based on Forward Backward Pass method.
 tic;
-[v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(d_dis,curv3,par);
+%[v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(d_dis,curv3,par);
+[v_max,v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass2(curv3,par); 
 toc
 curv = curv3.*(abs(curv3)>1e-15);
 a_y = v_dec.^2./(1./curv3);

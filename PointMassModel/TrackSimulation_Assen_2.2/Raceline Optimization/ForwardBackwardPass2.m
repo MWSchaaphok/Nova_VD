@@ -1,4 +1,4 @@
-function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(d_dis,curv4,par)
+function [v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass2(curv4,par,d_dis)
 
 %% Velocity profile phase 1 
 
@@ -16,7 +16,7 @@ a_acc = zeros(size(v_max'));                         % acceleration
 rpm_m = zeros(size(v_max'));                         % Rpm motor
 P_out = zeros(size(v_max'));
 W     = zeros(size(v_max'));
-v_acc(1) = 51.12;
+v_acc(1) = 1;
 for idx = 2:size(v_max,2)
     Wf    = a_acc(idx-1)*par.h/par.b*par.m;                         % Weight shift to front tire [N]
     
@@ -96,7 +96,7 @@ end
 %fprintf(num2str(min(a_dec(:))))
 %% Combine the phases 
 a = (v_dec ==v_acc_temp).*a_acc' + (v_dec ~=v_acc).*a_dec';
-size((v_dec == v_acc))
+size((v_dec == v_acc));
 W = (v_dec == v_acc).* W;                                      % Neglect forces during braking phase
 
 end

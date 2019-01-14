@@ -3,7 +3,7 @@ function [t, path, v] = GenerateTrajectory()
 %% Load bike variables 
 
 par = parameters();
-tol = 1 ;                 % tolerance for optimizing laptime 
+tol = 0.05 ;                 % tolerance for optimizing laptime 
 
 %% Ask for input: track, number of laps, discretization step. Load track
 track = 'At which track do you want to simulate the race? [Assen,Assen_optimal, Assen_middle,Straight]';
@@ -28,6 +28,10 @@ elseif strcmp(track_n{1}, 'Assen_middle')
     load([track_n{1},'track_ds_',num2str(ds),'.mat']);
 	curv3 = curv;
 	curv4 = curv;
+elseif strcmp(track_n{1},'Corner')
+    load('StraightCorner2.mat');
+    curv3 = curv; 
+    curv4 = curv; 
 end
 
  
@@ -35,19 +39,22 @@ end
 % Make a distance array for not equidistant distance profiles 
 dis_temp = [dist];
 
-if strcmp(track_n{1}, 'Straight') 
+if strcmp(track_n{1}, 'Corner') 
     dist = dis_temp;
 else 
     dist = cumsum(dis_temp);
 end
-
+ 
 %% Define inner and outer boundaries
 % For simplicity distance boundaries and middle line is equal 5m. 
+%dist = dist(1:end-2);
+%curv4 = curv4(1:end-2); 
 
 w_in = ones(size(curv4))*5;
-w_out = ones(size(curv4))*5;
+w_out = ones(size(curv4))*-5;
 
 % Define path structure
+
 path.dist = dist; 
 path.curv = curv4; 
 path.win = w_in;
@@ -58,6 +65,7 @@ path.wout = w_out;
 v = CalculateSpeedProfile(path,par);
 [t,tc] = ComputeLapTime(v,path);
 dt = 10;                            % Starting dt
+figure; plot(dist,v);
 
 %% Optimization loop 
 i=0; 
