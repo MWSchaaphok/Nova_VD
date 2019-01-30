@@ -56,6 +56,15 @@ cvx_begin
         x(1,:) <= w_in; 
         % System constraints x_k+1 = A_kx_k + B_k delta + d_k
         % Boundary constraints w_out < e < w_in
+        
+        % Seperate constraint for k = 1, because v(k) can be zero 
+             A = eye(5) + dt*[0 v_t(k) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(k) + b^2*Cr(k))/(v_t(k)*Iz) (a*Cf(k) - b*Cr(k))/(Iz) 0 ; ...
+                 0 0 (a*Cf(k) - b*Cr(k))/(par.m*v_t(k))-1 (Cf(k) + Cr(k))/(par.m*v_t(k)) 0 ; 0 0 1 0 0 ];
+             B = dt*[ 0;0;-a*Cf(k)/Iz; -Cf(k)/(par.m*v_t(k)); 0 ];
+             d = dt*[0 ; -curv_t(k)*v_t(k) ; 0 ; 0 ; 0]; 
+             x(:,k+1) == A*x(:,k) + B*delta(k) + d;
+             w_out(k) <= x(1,k) ;
+             x(1,k) <= w_in(k); 
         for k = 2:n-1
              A = eye(5) + dt*[0 v_t(k) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(k) + b^2*Cr(k))/(v_t(k)*Iz) (a*Cf(k) - b*Cr(k))/(Iz) 0 ; ...
                  0 0 (a*Cf(k) - b*Cr(k))/(par.m*v_t(k))-1 (Cf(k) + Cr(k))/(par.m*v_t(k)) 0 ; 0 0 1 0 0 ];
@@ -113,17 +122,19 @@ end
 
 % Update curvature and transform back to distance defined
 curv_t  = (psi_n(2:end) - psi_n(1:end-1))./(dist(2:end) - dist(1:end-1));
-curv_t  = [v
+curv_t  = [curv_t(1),curv_t];
 
 % Update the path 
 path.dist = dist; 
+path.ds   = diff(dist); 
 path.curv = curv_t; 
-path.win = w_in + e ; 
+path.win  = w_in + e ; 
 path.wout = w_out - e; 
-%v2   = interp1(tc,v,path.dist, 'spline','extrap');
+
+% Test wether dist, curv are correctly computed 
 psi = cumtrapz(path.dist,path.curv);
 N = cumtrapz(path.dist, cos(psi));
-E = cumtrapz(path.dist, -sin(psi))-e;
+E = cumtrapz(path.dist, -sin(psi));
 plot(E,N,'r:')
 
 end

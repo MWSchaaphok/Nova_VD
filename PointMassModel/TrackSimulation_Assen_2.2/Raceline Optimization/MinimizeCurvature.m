@@ -56,7 +56,11 @@ cvx_begin
         x(1,:) <= w_in; 
         % System constraints x_k+1 = A_kx_k + B_k delta + d_k
         % Boundary constraints w_out < e < w_in
-        for k = 2:n-1
+        % For robustness in case v(1) = 0; 
+        if  v_t(1) == 0 
+            v_t(1) = v_t(1) + 0.01; 
+        end
+        for k = 1:n-1
              A = eye(5) + dt*[0 v_t(k) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(k) + b^2*Cr(k))/(v_t(k)*Iz) (a*Cf(k) - b*Cr(k))/(Iz) 0 ; ...
                  0 0 (a*Cf(k) - b*Cr(k))/(par.m*v_t(k))-1 (Cf(k) + Cr(k))/(par.m*v_t(k)) 0 ; 0 0 1 0 0 ];
              B = dt*[ 0;0;-a*Cf(k)/Iz; -Cf(k)/(par.m*v_t(k)); 0 ];
