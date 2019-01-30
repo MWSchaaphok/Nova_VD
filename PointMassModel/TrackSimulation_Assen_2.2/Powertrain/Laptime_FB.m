@@ -130,7 +130,7 @@ Rpm_m  = Rpm_rs/par.gear_ratio;         % Rpm of motor
 % end
 
 %% Computation and plot Lap times
-[lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par);
+[~,lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par);
 laptime = lapt(2); 
 % ax = subplot(3, 2, 5);
 % text(0.5,0.5,lapstr);

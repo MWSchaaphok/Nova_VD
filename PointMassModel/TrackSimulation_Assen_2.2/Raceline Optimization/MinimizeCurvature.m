@@ -1,4 +1,4 @@
-function [path] = MinimizeCurvature(v,path,par,tc)
+function [path,v2] = MinimizeCurvature(v,path,par,tc)
 %n = size(path.dist,2);                              %number of timesteps
 
 %% Convert curv(s)-> curv(t), v(s)->v(t)
@@ -9,16 +9,18 @@ end
 
 %% Shift to time-dependent 
 endtime = floor(tc(end));         % round to one decimal
-t  = 1:0.1:endtime;                 % create uniform time distribution for the discretization
+dt = 0.1; 
+t  = 1:dt:endtime;                 % create uniform time distribution for the discretization
 
-v_t = interp1(tc,v,t);
+v_t = interp1(tc,v,t,'spline','extrap');
 curv = interp1(tc,path.curv,t);
 w_in = interp1(tc,path.win,t);
 w_out = interp1(tc,path.wout,t); 
 dist2 = interp1(tc,path.dist,t);
 
+
 %% Build matrices
-n = size(t);
+n = length(t);
 Cf = 160*ones(size(t));
 Cr = 180*ones(size(t));
 Fyf = 100*ones(size(t));
@@ -34,6 +36,7 @@ b = par.b-a;
 %% CVX Optimization routine 
 % Now skips the first element in the sum minimization to prevent division
 % by zero. 
+% The discretization of the matrices is still wrong! 
 
 lambda = 1;                        % Regularization parameter to ensure smooth steering 
 cvx_begin
@@ -50,23 +53,24 @@ cvx_begin
 %         for k = 1:n
 %         path.wout(k) <= x(k) <= path.win(k);
 %         end
-%    Constraints for each x_k sepearte 
-         for k = 1:n-2
+%    Constraints for each x_k seperate 
+        x(:,1) == [0;0;0;0;0]; 
+        for k = 1:n-1
           
-             A = [0 v(k) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(k) + b^2*Cr(k))/(v(k)*Iz) (a*Cf(k) - b*Cr(k))/(Iz) 0 ; ...
-                 0 0 (a*Cf(k) - b*Cr(k))/(par.m*v(k))-1 (Cf(k) + Cr(k))/(par.m*v(k)) 0 ; 0 0 1 0 0 ];
-             B = [ 0;0;-a*Cf(k)/Iz; -Cf(k)/(par.m*v(k)); 0 ];
-             d = [0 ; -curv(k)*v(k) ; 0 ; 0 ; 0]; 
+             A = eye(5) + dt*[0 v_t(k) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(k) + b^2*Cr(k))/(v_t(k)*Iz) (a*Cf(k) - b*Cr(k))/(Iz) 0 ; ...
+                 0 0 (a*Cf(k) - b*Cr(k))/(par.m*v_t(k))-1 (Cf(k) + Cr(k))/(par.m*v_t(k)) 0 ; 0 0 1 0 0 ];
+             B = dt*[ 0;0;-a*Cf(k)/Iz; -Cf(k)/(par.m*v_t(k)); 0 ];
+             d = dt*[0 ; -curv(k)*v_t(k) ; 0 ; 0 ; 0]; 
              x(:,k+1) == A*x(:,k) + B*delta(k) + d;
              w_out(k) <= x(1,k) ;
              x(1,k) <= w_in(k); 
          end
-          A = [0 v(n-1) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(n-1) + b^2*Cr(n-1))/(v(n-1)*Iz) (a*Cf(n-1) - b*Cr(n-1))/(Iz) 0 ; ...
-               0 0 (a*Cf(n-1) - b*Cr(n-1))/(par.m*v(n-1))-1 (Cf(n-1) + Cr(n-1))/(par.m*v(n-1)) 0 ; 0 0 1 0 0 ];
-          B = [ 0;0;-a*Cf(n-1)/Iz; -Cf(n-1)/(par.m*v(n-1)); 0 ];
-          d = [0 ; -path.curv(n-1)*v(n-1) ; 0 ; 0 ; 0];
-          x(1,:) >= wout;
-          x(1,:) <= win; 
+          %A = eye(5) + dt*[0 v_t(n-1) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(n-1) + b^2*Cr(n-1))/(v_t(n-1)*Iz) (a*Cf(n-1) - b*Cr(n-1))/(Iz) 0 ; ...
+          %     0 0 (a*Cf(n-1) - b*Cr(n-1))/(par.m*v_t(n-1))-1 (Cf(n-1) + Cr(n-1))/(par.m*v_t(n-1)) 0 ; 0 0 1 0 0 ];
+          %B = dt*[ 0;0;-a*Cf(n-1)/Iz; -Cf(n-1)/(par.m*v_t(n-1)); 0 ];
+          %d = dt*[0 ; -path.curv(n-1)*v_t(n-1) ; 0 ; 0 ; 0];
+          x(1,:) >= w_out;
+          x(1,:) <= w_in; 
           %x(:,1) == A*x(:,n-1) + B*delta(n-1) + d;
           %x(:,1) == x(:,end);
 cvx_end
@@ -98,29 +102,33 @@ axis equal
 hold on; 
 
 % Update North-East coordinates
-E_new = E - e.*cos(psi);
-N_new = N - e.*sin(psi);
+psi2 = interp1(tc,psi,t);
+E2   = interp1(tc,E,t);
+N2   = interp1(tc,N,t);
+
+E_new = E2 - e.*cos(psi2);
+N_new = N2 - e.*sin(psi2);
 
 plot(E_new,N_new,'g-')
 
 
 % Update distance
-dist = zeros(size(E)); 
-for k = 2:size(E,2)
+dist = zeros(size(E2)); 
+for k = 2:size(E2,2)
    dist(k) = dist(k-1) + sqrt((E_new(k)-E_new(k-1))^2 + (N_new(k)-N_new(k-1))^2);
 end
 
 % Update curvature 
-curv = (psi_n - [0,psi_n(1:end-1)])./(path.dist - [0,path.dist(1:end-1)]);
+curv = (psi_n - [0,psi_n(1:end-1)])./(dist - [0,dist(1:end-1)]);
 %curv = [0,curv];
 
 
 % Update the path 
 path.dist = dist; 
 path.curv = curv; 
-path.win = path.win + e ; 
-path.wout = path.wout - e; 
-
+path.win = w_in + e ; 
+path.wout = w_out - e; 
+v2   = interp1(tc,v,path.dist, 'spline','extrap');
 psi = cumtrapz(path.dist,path.curv);
 N = cumtrapz(path.dist, cos(psi));
 E = cumtrapz(path.dist, -sin(psi))-e;

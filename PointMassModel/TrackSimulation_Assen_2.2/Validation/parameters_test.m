@@ -3,11 +3,11 @@ function [par] = parameters_test()
 par.ds = 1;
 
 %%% Bike measurements %%%
-par.m =  290;              % Mass of the motorcycle with the rider 310, without 230 [kg]
+par.m =  310;              % Mass of the motorcycle with the rider 310, without 230 [kg]
 par.g =  9.81;             % Gravitational constant [ms-2]
 par.b =  1.45;             % Wheelbase [m] 
 par.c_h = 0.38;            % Coefficient COG height
-par.h = par.c_h*par.b;     % Height COG [m] -> temporary approx based on Foalte/Cossalter
+par.h  = par.c_h*par.b;     % Height COG [m] -> temporary approx based on Foalte/Cossalter
 par.d  = 2.01;             % Circumference wheel
 par.l1 = 0.48;             % Coefficient for weight distribution front [N]
 par.l2 = 1-par.l1;         % Coefficient for weight distribution back  [N]
@@ -24,7 +24,7 @@ par.Pr=31.9083023;          % lbf/inch^2
 
 %%% Drag Force %%%
 par.Cd=0.350;               % Drag force coefficient
-par.A=0.1;                  % Frontal area of the bike with rider flat (m^2)
+par.A=0.36;                  % Frontal area of the bike with rider flat (m^2)
 par.rho=1.225;              % Sea level density in Pascals
 
 %%% lift force %%%

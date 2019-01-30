@@ -39,7 +39,7 @@ end
 % Make a distance array for not equidistant distance profiles 
 dis_temp = [dist];
 
-if strcmp(track_n{1}, 'Corner') 
+if strcmp(track_n{1}, 'Corner') || strcmp(track_n{1},'Straight')
     dist = dis_temp;
 else 
     dist = cumsum(dis_temp);
@@ -72,8 +72,8 @@ i=0;
 while abs(dt) > tol 
    temp_t = tc(end); 
    v = CalculateSpeedProfile(path,par);
-   path = MinimizeCurvature(v,path,par,tc);
-   [t,tc] = ComputeLapTime(v,path);
+   [path,v2] = MinimizeCurvature(v,path,par,tc);
+   [t,tc] = ComputeLapTime(v2,path);
    dt = temp_t-tc(end); 
    i = i+1; 
 end
