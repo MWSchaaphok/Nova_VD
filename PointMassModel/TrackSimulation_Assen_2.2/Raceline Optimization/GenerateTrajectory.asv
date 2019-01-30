@@ -1,16 +1,13 @@
 function [t, path, v] = GenerateTrajectory()
 %% This function optimizes the raceline within a given path +- 5m of boundaries. 
-%  Inputs:  Track, defined by distance ([ds_1,ds_2,...,ds_n]) and curvature at each of the distance points. 
+%  Inputs:  Track, defined by distance ([ds_1,ds_2,...,ds_n]) and curvature at each of the distance points.
+%           Number of laps, for optimization only 1 lap is necessary 
 %           Starting speed v_0 -> still needs to be added
 %           Motorcycle parameters 
 %           Tolerance for the optimization
 %  Outputs: Path, optimized raceline along the track
 %           Laptime for optimized path
 %           Velocity profile for optimized path
-
-% The inner and outer boundary of the track are defined by starting
-% curavture +- 5 m, for good results give the first curvature as the middle
-% of the track.
 
 %% Load bike variables 
 % Maybe add input possibilities?
@@ -32,9 +29,12 @@ end
 
  
 %% Adapt track array 
+% Make a distance array for not equidistant distance profiles 
+% Save 
 d_dist  = dist;
-curv    = [curv(1),curv];
-dist    = cumsum([0,dist]);
+curv    = [0,curv];
+dist    = [0,cumsum(dist)];
+
  
 %% Define inner and outer boundaries
 % For simplicity distance boundaries and middle line is equal 5m.
@@ -49,10 +49,6 @@ path.curv   = curv;
 path.win    = w_in;
 path.wout   = w_out; 
 
-% Define and save track
-psi_track       = cumtrapz(path.dist,path.curv);
-path.N_track    = cumtrapz(path.dist, cos(psi_track));
-path.E_track    = cumtrapz(path.dist, -sin(psi_track));
 
 %% Find starting laptime
 v       = CalculateSpeedProfile(path,par,v_0);
