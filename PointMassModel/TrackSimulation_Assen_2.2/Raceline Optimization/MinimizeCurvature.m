@@ -7,8 +7,8 @@ if size(tc) ~= size(path.dist)
 end 
 
 %% Shift to time-dependent variables
-endtime = floor(tc(end));                   % round to one decimal, if the optimization is fast it can be rounded to 0.01
-dt = 0.1;                                   % Size of timesteps that are taken 
+dt = 0.1;                                   % Size of timesteps that are taken, the smaller the more accurate 
+endtime = floor(tc(end)/dt)*dt;             % round to one decimal, if the optimization is fast it can be rounded to 0.01
 t  = 0:dt:endtime;                          % create uniform time distribution for the discretization
 
 % Interpolate all necessary values to time domain  - default linear
@@ -99,9 +99,9 @@ plot(E,N,'r-')
 hold on
 
 % Update North-East coordinates
-psi2 = interp1(tc,psi,t);
-E2   = interp1(tc,E,t);
-N2   = interp1(tc,N,t);
+psi2 = interp1(tc,psi,t,'spline','extrap');
+E2   = interp1(tc,E,t,'spline','extrap');
+N2   = interp1(tc,N,t,'spline','extrap');
 
 E_new = E2 - e.*cos(psi2);
 N_new = N2 - e.*sin(psi2);
