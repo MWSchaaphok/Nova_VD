@@ -1,4 +1,4 @@
-function [path,v_t] = MinimizeCurvature(v,path,par,tc)
+function [path] = MinimizeCurvature(v,path,par,tc)
 %% Minimize the curvature of the raceline 
 
 %% Convert curv(s)-> curv(t), v(s)->v(t)
@@ -98,7 +98,7 @@ E   = cumtrapz(path.dist, -sin(psi));
 plot(E,N,'r-')
 hold on
 
-% Update North-East coordinates
+% Transform old North-East coordinates
 psi2 = interp1(tc,psi,t,'spline','extrap');
 E2   = interp1(tc,E,t,'spline','extrap');
 N2   = interp1(tc,N,t,'spline','extrap');

@@ -67,9 +67,10 @@ plot(dist,v);
 i=0; 
 while abs(dt) > tol 
    temp_t       = tc(end); 
+   %v           = CalculateSpeedProfile(path,par,v_0);
+   [path]       = MinimizeCurvature(v,path,par,tc);
    v            = CalculateSpeedProfile(path,par,v_0);
-   [path,v2]    = MinimizeCurvature(v,path,par,tc);
-   [t,tc]       = ComputeLapTime(v2,path);
+   [t,tc]       = ComputeLapTime(v,path);
    dt           = temp_t-tc(end); 
    i            = i+1; 
 end
