@@ -68,8 +68,8 @@ curv4 = temp_curv4;
 
 %% Compute acceleration and velocity profile based on Forward Backward Pass method.
 tic;
-%[v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(d_dis,curv3,par);
-[v_max,v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass2(curv3,par); 
+[v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(d_dis,curv3,par);
+%[v_max,v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass2(curv3,par); 
 toc
 curv = curv3.*(abs(curv3)>1e-15);
 a_y = v_dec.^2./(1./curv3);
@@ -138,6 +138,7 @@ end
 
 %% Computation and plot Lap times
 [t,lapt,lapstr] = Laptime2(d_dis,v_dec,curv3,curv4,n_lap,par);
+%[t,lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par);
 ax = subplot(3, 2, 5);
 text(0.5,0.5,lapstr);
 set ( ax, 'visible', 'off')

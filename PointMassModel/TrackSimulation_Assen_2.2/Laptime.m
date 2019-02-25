@@ -8,7 +8,7 @@ function [tc,lapt,lapstr] = Laptime(v_dec,curv3,curv4,n_lap,par)
 %  Last modified: 19-10-2018 (Marianne)
 
 % Compute total time for all laps
-t = par.ds./v_dec(2:end);                   
+t = 2*par.ds./(v_dec(1:end-1)+v_dec(2:end));                   
 tc = cumsum(t);
 lap_tot = double(tc(end));
 sprintf('Total Lap Time = %d s',lap_tot)

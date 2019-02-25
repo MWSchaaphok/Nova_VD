@@ -12,11 +12,11 @@ endtime = floor(tc(end)/dt)*dt;             % round to one decimal, if the optim
 t  = 0:dt:endtime;                          % create uniform time distribution for the discretization
 
 % Interpolate all necessary values to time domain  - default linear
-v_t     = interp1(tc,v,t);                      
-curv_t  = interp1(tc,path.curv,t);
-w_in    = interp1(tc,path.win,t);
-w_out   = interp1(tc,path.wout,t); 
-dist_t  = interp1(tc,path.dist,t);
+v_t     = interp1(tc,v,t,'spline','extrap');                      
+curv_t  = interp1(tc,path.curv,t,'spline','extrap');
+w_in    = interp1(tc,path.win,t,'spline','extrap');
+w_out   = interp1(tc,path.wout,t,'spline','extrap'); 
+dist_t  = interp1(tc,path.dist,t,'spline','extrap');
 
 %% Build matrices
 n = length(t);
@@ -66,7 +66,7 @@ cvx_begin
              B = dt*[ 0;0;-a*Cf(k)/Iz; -Cf(k)/(par.m*v_t(k)); 0 ];
              d = dt*[0 ; -curv_t(k)*v_t(k) ; 0 ; 0 ; 0]; 
              x(:,k+1) == A*x(:,k) + B*delta(k) + d;
-             w_out(k) <= x(1,k) ;
+             x(1,k) >= w_out(k) ;
              x(1,k) <= w_in(k); 
          end
 cvx_end
@@ -75,6 +75,7 @@ cvx_end
 
 % Collect e and psi data from X and store in seperate vectors 
 e = x(1,:); 
+dpsi = x(2,:);
 psi_n = x(5,:);
 
 % Plot track with boundaries and middle line
@@ -106,12 +107,12 @@ N2   = interp1(tc,N,t,'spline','extrap');
 E_new = E2 - e.*cos(psi2);
 N_new = N2 - e.*sin(psi2);
 
-plot(E_new,N_new,'g-')
+plot(E_new,N_new,'b-')
 legend('track','previous curvature','new curvature')
 
 % Update distance
-dist = zeros(size(E2)); 
-for k = 2:size(E2,2)
+dist = zeros(size(E_new)); 
+for k = 2:size(E_new,2)
    dist(k) = dist(k-1) + sqrt((E_new(k)-E_new(k-1))^2 + (N_new(k)-N_new(k-1))^2);
 end
 
@@ -119,17 +120,22 @@ end
 curv_t  = (psi_n(2:end) - psi_n(1:end-1))./(dist(2:end) - dist(1:end-1));
 curv_t  = [curv_t(1),curv_t];
 
+% Update inner and outer boundaries
+alpha = 90*ones(size(dpsi)) - dpsi;
+win_n = (w_in - e)./sin(alpha);
+wout_n = (w_out - e)./sin(alpha);
+
 % Update the path 
 path.dist = dist; 
 path.ds   = diff(dist); 
 path.curv = curv_t; 
-path.win  = w_in + e ; 
-path.wout = w_out - e; 
+path.win  = win_n ; 
+path.wout = wout_n; 
 
 % Test wether dist, curv are correctly computed 
-psi = cumtrapz(path.dist,path.curv);
-N = cumtrapz(path.dist, cos(psi));
-E = cumtrapz(path.dist, -sin(psi));
-plot(E,N,'r:')
+psi_t = cumtrapz(path.dist,path.curv);
+N_t = cumtrapz(path.dist, cos(psi_t));
+E_t = cumtrapz(path.dist, -sin(psi_t));
+plot(E_t,N_t,'r:')
 
 end

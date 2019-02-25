@@ -20,7 +20,7 @@ v_0 = 0;                        % Start velocity - default = 0
 
 %% Ask for input: track, number of laps, discretization step. Load track
 % Note! Track should be defined as [ds_1,ds_2,...,ds_n]
-track = 'At which track do you want to simulate the race? [Assen,Assen_optimal, Assen_middle,Straight]';
+track = 'At which track do you want to simulate the race? [Assen,Straight,Corner]';
 track_n = input(track);
 track_n = cellstr(track_n);
 
@@ -28,6 +28,8 @@ if strcmp(track_n{1}, 'Straight')
     load('Assen_straight_1.mat');
 elseif strcmp(track_n{1},'Corner')
     load('StraightCorner2.mat');
+elseif strcmp(track_n{1},'Assen')
+    load('Assen_middle.mat');
 end
 
  
