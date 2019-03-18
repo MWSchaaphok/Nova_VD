@@ -7,7 +7,7 @@ if size(tc) ~= size(path.dist)
 end 
 
 %% Shift to time-dependent variables
-dt = 0.1;                                   % Size of timesteps that are taken, the smaller the more accurate 
+dt = 0.05;                                   % Size of timesteps that are taken, the smaller the more accurate 
 endtime = floor(tc(end)/dt)*dt;             % round to one decimal, if the optimization is fast it can be rounded to 0.01
 t  = 0:dt:endtime;                          % create uniform time distribution for the discretization
 
@@ -62,7 +62,7 @@ cvx_begin
         end
         for k = 1:n-1
              A = eye(5) + dt*[0 v_t(k) 0 0 0 ; 0 0 1 0 0 ; 0 0 (a^2*Cf(k) + b^2*Cr(k))/(v_t(k)*Iz) (a*Cf(k) - b*Cr(k))/(Iz) 0 ; ...
-                 0 0 (a*Cf(k) - b*Cr(k))/(par.m*v_t(k))-1 (Cf(k) + Cr(k))/(par.m*v_t(k)) 0 ; 0 0 1 0 0 ];
+                 0 0 (a*Cf(k) - b*Cr(k))/(par.m*(v_t(k))^2)-1 (Cf(k) + Cr(k))/(par.m*v_t(k)) 0 ; 0 0 1 0 0 ];
              B = dt*[ 0;0;-a*Cf(k)/Iz; -Cf(k)/(par.m*v_t(k)); 0 ];
              d = dt*[0 ; -curv_t(k)*v_t(k) ; 0 ; 0 ; 0]; 
              x(:,k+1) == A*x(:,k) + B*delta(k) + d;
@@ -117,11 +117,12 @@ for k = 2:size(E_new,2)
 end
 
 % Update curvature and transform back to distance defined
-curv_t  = (psi_n(2:end) - psi_n(1:end-1))./(dist(2:end) - dist(1:end-1));
-curv_t  = [curv_t(1),curv_t];
+%curv_t  = (psi_n(2:end) - psi_n(1:end-1))./(dist(2:end) - dist(1:end-1));
+curv_t  = gradient(psi_n)./gradient(dist);
+%curv_t  = [curv_t(1),curv_t];
 
 % Update inner and outer boundaries
-alpha = 90*ones(size(dpsi)) - dpsi;
+alpha = pi/2*ones(size(dpsi)) - dpsi;
 win_n = (w_in - e)./sin(alpha);
 wout_n = (w_out - e)./sin(alpha);
 
@@ -133,9 +134,14 @@ path.win  = win_n ;
 path.wout = wout_n; 
 
 % Test wether dist, curv are correctly computed 
-psi_t = cumtrapz(path.dist,path.curv);
-N_t = cumtrapz(path.dist, cos(psi_t));
-E_t = cumtrapz(path.dist, -sin(psi_t));
+dist_test = 0:1:path.dist(end);
+curv_test = interp1(path.dist,path.curv,dist_test,'spline','extrap');
+psi_t = cumtrapz(dist_test,curv_test);
+N_t = cumtrapz(dist_test, cos(psi_t));
+E_t = cumtrapz(dist_test, -sin(psi_t));
+% psi_t = cumtrapz(path.dist,path.curv);
+% N_t = cumtrapz(path.dist, cos(psi_t));
+% E_t = cumtrapz(path.dist, -sin(psi_t));
 plot(E_t,N_t,'r:')
 
 end

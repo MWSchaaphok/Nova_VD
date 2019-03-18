@@ -1,7 +1,7 @@
 %% Laptime simulation model 
 % Author: Anoosh Hegde (September 2017 - August 2018)
 % Edited and expanded by: Marianne Schaaphok (October 2018 - )
-% Last modified: 25-10-2018
+% Last modified: 
 % Based on approach from: ...... 
 %
 % This model computes the laptime of a motorcycle for a number of laps

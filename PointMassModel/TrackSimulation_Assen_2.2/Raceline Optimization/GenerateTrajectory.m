@@ -67,7 +67,8 @@ plot(dist,v);
 
 %% Optimization loop 
 i=0; 
-while abs(dt) > tol 
+% while abs(dt) > tol
+while i<1
    temp_t       = tc(end); 
    %v           = CalculateSpeedProfile(path,par,v_0);
    [path]       = MinimizeCurvature(v,path,par,tc);

@@ -37,7 +37,7 @@ par.Tm = 260;               % Continuous driving torque
 
 %%% Power %%%
 %P=110;                     % Max power of the motor [kW]
-par.gear_ratio = 1/2.5;     % gear ratio (between motor and sprochet) - 17/41
+par.gear_ratio = 1/1.9;     % gear ratio (between motor and sprochet) - 17/41
 
 %%% Radia %%%
 par.Rw = 0.3;               % Wheel radius

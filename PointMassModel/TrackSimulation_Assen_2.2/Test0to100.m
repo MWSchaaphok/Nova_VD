@@ -15,7 +15,7 @@ load([track_n,'_track_ds_',num2str(par.ds),'.mat']);
 %run bike_constants.m
 
 tic;
-[v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass(curv4,par);
+[v_max, v_acc,v_dec,a,rpm_m,W] = ForwardBackwardPass2(curv4,par,0.1,0);
 toc
 
 % Find first index where velocity larger than 100 km/h
