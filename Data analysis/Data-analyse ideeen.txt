@@ -1,0 +1,42 @@
+Data analysis ideas:
+
+	Read information from www.datamc.org 
+
+General:
+	-> Motorcycle set-up/race information sheet
+		-> Examples available at ww.datamc.org/downloads
+	-> User friendly
+		-> Multiple channels at once -> option to overlap in one graph
+		-> GUI drop down manuals of what to show
+	-> Good documentation
+	-> Compare laps vs showing one lap/data set
+	-> Seperate laps from the data
+
+
+Sensors:
+	Must haves:
+		Accelerometer	-> accelerations
+		Gps 		-> position, velocity
+		Gyroscope 	-> lean angle
+	Should haves:
+		Wheel speed	-> acceleration
+		Suspension potentiometer
+
+-> Divide the track into logical sectors 
+	-> make it easy to change sector definitions?
+
+Graphs 
+	-> Distance - X plots
+		- Speed
+		- RPM (note RPM is lightly dependent on the lean angle)
+		- Acceleration (longitudinal/lateral)
+			
+	-> X-Y plots
+	-> Histograms 
+		- RPM
+		- Suspension
+		- Throttle position
+	-> Rate of change channels
+
+
+

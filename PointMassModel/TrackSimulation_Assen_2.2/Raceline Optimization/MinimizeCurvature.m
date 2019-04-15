@@ -52,6 +52,8 @@ cvx_begin
         % Starting condition -> now set everything to zero, check if this
         % is correct 
         x(:,1) == [0;0;0;0;0]; 
+        %x(1,n) == 5;
+        x(2,n) == 0; 
         x(1,:) >= w_out;
         x(1,:) <= w_in; 
         % System constraints x_k+1 = A_kx_k + B_k delta + d_k
@@ -91,12 +93,13 @@ xlabel('E')
 ylabel('N')
 hold on; 
 
+%return
 % Compute and plot North-East coordinates previous curvature
 psi = cumtrapz(path.dist,path.curv);
 N   = cumtrapz(path.dist, cos(psi));
 E   = cumtrapz(path.dist, -sin(psi));
 
-plot(E,N,'r-')
+%plot(E,N,'r-')
 hold on
 
 % Transform old North-East coordinates
@@ -108,7 +111,7 @@ E_new = E2 - e.*cos(psi2);
 N_new = N2 - e.*sin(psi2);
 
 plot(E_new,N_new,'b-')
-legend('track','previous curvature','new curvature')
+%legend('track','previous curvature','new curvature')
 
 % Update distance
 dist = zeros(size(E_new)); 
@@ -143,5 +146,6 @@ E_t = cumtrapz(dist_test, -sin(psi_t));
 % N_t = cumtrapz(path.dist, cos(psi_t));
 % E_t = cumtrapz(path.dist, -sin(psi_t));
 plot(E_t,N_t,'r:')
-
+legend('track','optimized trajectory','transformed trajectory')
+title('Optimized and transformed trajectory')
 end

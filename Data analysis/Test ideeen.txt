@@ -1,0 +1,37 @@
+Goals of testing:
+	- 	
+
+
+	- Collect data for next year
+
+Components to be tested:
+	Powertrain 
+	1. Battery pack		
+	2. Safety control unit
+	3. Motor controller
+	4. Motor
+	5. Cooling
+
+	Chassis
+	1. Frame -> loads 
+	2. Suspension
+ 
+Dynometer testing
+	Different amounts of power
+		40% 
+		60%
+		80%
+		100% 
+	How long can it run? -> should be at least 10/11 laps around Assen (~45-50 km) 
+	
+Track testing 
+
+	Straight tracks
+		Accelerations 0-100, 0-200
+		Top speed
+
+	Complete tracks
+		Behaviour in cornering
+		How long can it run
+
+

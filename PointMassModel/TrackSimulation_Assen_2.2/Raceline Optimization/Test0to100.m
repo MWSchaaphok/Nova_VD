@@ -1,4 +1,4 @@
-function [] = Test0to100()
+function [tend] = Test0to100()
 %% Function description 
 %  This function tests the amount of seconds needed to accelerate from 0 to
 %  100 km/h. 
@@ -9,7 +9,7 @@ track_n = 'Straight';
 n_lap = 1;
 %par.ds = 0.1;
 load('Straight_600.mat');
-ds = ones(size(dist))
+ds = ones(size(dist));
 curv    = [curv(1),curv];
 dist    = cumsum([0,dist]);
 % Load bike constants
@@ -26,7 +26,7 @@ ix = find(v_dec>100/3.6);
 t = par.ds./v_dec(2:end); 
 
 % Total time for 0 to 100
-t1 = cumsum(t(1:ix));
+t1 = cumsum(t(1:ix(1)));
 tend = t1(end);
 fprintf(['0 to 100 km/h in ' num2str(tend) ' s' newline]);
 figure; 

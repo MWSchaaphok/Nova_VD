@@ -3,7 +3,7 @@ function [par] = parameters()
 par.ds = 1;
 
 %%% Bike measurements %%%
-par.m =  290;              % Mass of the motorcycle with the rider 310, without 230 [kg]
+par.m =  290;              % Mass of the motorcycle with the rider 290, without 220 [kg]
 par.g =  9.81;             % Gravitational constant [ms-2]
 par.b =  1.45;             % Wheelbase [m] 
 par.c_h = 0.4;            % Coefficient COG height
@@ -33,7 +33,7 @@ par.Cl=0.12;                % Lift force coefficient mulitlied by frontal area =
 %%% Driving force %%%
 par.mu_static=1;            % Static friction coefficient for rear tire
 par.mu_dynamic=1.1;         % Dynamic friction coefficient for rear tire 0.85
-par.Tm = 475;               % Continuous driving torque
+par.Tm = 260;               % Continuous driving torque
 
 %%% Power %%%
 %P=110;                     % Max power of the motor [kW]
