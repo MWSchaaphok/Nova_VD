@@ -56,7 +56,7 @@ addpath('InputFunctions');
     DefAns.Date = date;
     i = i+1;
     
-    Prompt(i,:) = {['Load file (.csv), click to choose another file'],[],[]};
+    Prompt(i,:) = {['Load file (*.csv *.mat *.m), click to choose another file'],[],[]};
     Formats(i,1).type = 'text';
     Formats(i,1).size = [-1 0];
     Formats(i,1).span = [1 2]; 
@@ -66,7 +66,8 @@ addpath('InputFunctions');
     Prompt(i,:) = {'DAQ file','DAQfile',[]};
     Formats(i,1).type = 'edit';
     Formats(i,1).format = 'file';
-    Formats(i,1).items = {'*.daq','DAQ File (*.daq)';'*.csv*','CSV file (*.csv)';'*.*','All Files'};
+    %Formats(i,1).items = {'*.daq','DAQ File (*.daq)';'*.csv*','CSV file (*.csv)';'*.*','All Files'};
+    Formats(i,1).items = {'*.csv'};
     Formats(i,1).limits = [0 1]; % single file get
     Formats(i,1).size = [-1 0];
     Formats(i,1).span = [1 2];  % item is 1 field x 3 fields
@@ -133,6 +134,13 @@ addpath('InputFunctions');
     Formats(i,1).format = 'float';
     Formats(i,1).size = 200; % automatically assign the height
     i = i+1;
+    
+    % Wind speed
+    Prompt(i,:) = {'Wind Force (0-8)', 'WindForce',[]};
+    Formats(i,1).type = 'edit';
+    Formats(i,1).format = 'float';
+    Formats(i,1).size = 200; % automatically assign the height
+    i = i+1;   
     
     % Track conditions
     Prompt(i,:) = {'Track Conditions','TrackConditions',[]};

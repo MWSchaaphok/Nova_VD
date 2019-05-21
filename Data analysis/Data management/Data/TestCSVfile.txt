@@ -1,0 +1,13 @@
+Name team member: .
+Test date: 1-5-2019.
+File name test data: C:\Users\Marianne\Documents\GitHub\Nova_VD\Data analysis\Data management\Data\TestCSVfile.csv.
+Type of test: Dynometer.
+Track: .
+Number of laps: .
+Weather type: Sunny.
+Temperature: .
+Track conditions: Dry.
+Tire Compound: Soft.
+Tire Pressure: .
+Gear ratio: 0.52632.
+Notes: .
