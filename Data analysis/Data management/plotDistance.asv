@@ -1,6 +1,5 @@
 function [] = plotDistance(ploty,sp)
     global Velocity Acc gps LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC distance
-    global handles
         cla(sp)
         var = eval(ploty);
         FN = fieldnames(var);
@@ -10,11 +9,10 @@ function [] = plotDistance(ploty,sp)
             hold(sp, 'on'); 
             leg{i-1} = strrep(FN{i},'_',' ');
         end 
-        ttl = strrep(ploty,'_',' ');
-        title(sp,[ttl,' over the track'])
+        title(sp,[ploty,' over the track'])
         xlabel(sp,'Distance [m]');
-        ylabel(sp,ttl)
-        legend(sp,leg{:})
+        ylabel(sp,ploty)
+        legend(sp,leg)
         %legend(sp, FN{2:end});
         hold(sp, 'off')
 end 

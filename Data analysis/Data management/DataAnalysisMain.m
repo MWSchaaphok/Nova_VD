@@ -95,18 +95,19 @@ else
     N_track    = cumtrapz(dist_track, cos(psi_track));
     E_track    = cumtrapz(dist_track, -sin(psi_track));
     
-    plot(Xs,Ys);
-    hold on
-    plot(E_track,N_track,'k--');
-    hold on
-    [x_left,y_left]     = para_curves(E_track,N_track,-5);
-    [x_right,y_right]   = para_curves(E_track,N_track,5);
-    plot(x_left,y_left,'k-','HandleVisibility','off')
-    plot(x_right,y_right,'k-','HandleVisibility','off')
-    axis equal 
-    xlabel('E')
-    ylabel('N')
-    hold off
+%     plot(Xs,Ys);
+%     hold on
+%     plot(E_track,N_track,'k--');
+%     hold on
+%     [x_left,y_left]     = para_curves(E_track,N_track,-5);
+%     [x_right,y_right]   = para_curves(E_track,N_track,5);
+%     plot(x_left,y_left,'k-','HandleVisibility','off')
+%     plot(x_right,y_right,'k-','HandleVisibility','off')
+%     axis equal 
+%     xlabel('E')
+%     ylabel('N')
+%     hold off
+
     %Compute distance
     % Convert to radians
     lat = gps.latitude/180*pi;
@@ -147,8 +148,8 @@ else
     end 
     curvature = [real(curvature),real(curvature(end))];
 end 
-figure
-plot(distance,curvature)
+%figure
+%plot(distance,curvature)
 
 
  % Define and save track
@@ -168,8 +169,8 @@ plot(distance,curvature)
 %               - BMS-voltage over distance
 plot(sp1,Xs,Ys); 
 title(sp1,'GPS trajectory of the bike')
-xlabel(sp1,'x');
-ylabel(sp1,'y')
+xlabel(sp1,'x [m]');
+ylabel(sp1,'y [m]')
 legend(sp1,'GPS');
 handles.typef1x.Value = 1;
 handles.typef1y.Value = 3;
@@ -178,7 +179,7 @@ plot(sp2,BMS_T.t,BMS_T.temp_min, BMS_T.t,BMS_T.temp_max, BMS_T.t,BMS_T.temp_avg)
 title(sp2,'Temperature BMS')
 xlabel(sp2,'Time [s]');
 ylabel(sp2,'Temperature [C]')
-legend(sp2,'Min Temperature','Max Temperature','Avg temperature');
+legend(sp2,'temp min','temp max','temp avg');
 handles.typef2x.Value = 3; 
 handles.typef2y.Value = 7; 
 

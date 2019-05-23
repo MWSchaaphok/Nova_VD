@@ -7,10 +7,13 @@ function [] = plotTime(ploty,sp)
         for i = 2:num
             plot(sp, var.t, var.(FN{i}))
             hold(sp, 'on'); 
+            leg{i} = strrep(FN{i},'_',' ');
         end 
-        title(sp,[ploty, ' over time'])
+        ttl = strrep(ploty,'_',' ');
+        title(sp,[ttl, ' over time'])
         xlabel(sp,'Time [s]');
-        ylabel(sp,ploty)
-        legend(sp, FN{2:end});
+        ylabel(sp,ttl)
+        %legend(sp, FN{2:end});
+        legend(sp,leg{:});
         hold(sp, 'off')
 end 
