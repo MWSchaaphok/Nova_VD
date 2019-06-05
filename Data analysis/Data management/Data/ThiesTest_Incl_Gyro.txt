@@ -1,0 +1,13 @@
+Name team member: Marianne.
+Test date: 1-6-2019.
+File name test data: C:\Users\Marianne\Documents\GitHub\Nova_VD\Data analysis\Data management\Data\ThiesTest_Incl_Gyro.csv.
+Type of test: Other.
+Track: Outside.
+Number of laps: NaN.
+Weather type: Sunny.
+Temperature: 18.0.
+Track conditions: Dry.
+Tire Compound: Medium.
+Tire Pressure: .
+Gear ratio: 0.52632.
+Notes: Test data by driving around in the car. Gyrodata included. .

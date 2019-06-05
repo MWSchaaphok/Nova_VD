@@ -1,6 +1,6 @@
 % script reads csv of DAQ data and saves proper variables
 % Thies Oelerich & Marianne Schaaphok
-function [gps,LV,BMS_V,BMS_C,BMS_T,acc,MC_m,MC_PS,MC_air,MC] = readDAQcsv(file)
+function [gps,LV,BMS_V,BMS_C,BMS_T,acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv(file)
 
 % Read all contents of csv file in one big matrix
 %A = csvread(file,1,0);
@@ -17,9 +17,12 @@ latitude                 = A(:, 2);
 longitude                = A(:, 3);
 idx                      = ~isnan(t1);
 
-gps.t                       = t1(idx);
-gps.latitude                 = latitude(idx);
-gps.longitude                = longitude(idx);
+gps.t                    = t1(idx);
+gps.latitude             = latitude(idx);
+gps.longitude            = longitude(idx);
+
+gps.longitude            = floor(gps.longitude) + 10*(gps.longitude-floor(gps.longitude));
+gps.latitude             = floor(gps.latitude) + 10*(gps.latitude-floor(gps.latitude));
 
 % LV voltage
 t2                       = A(:, 4);
@@ -36,11 +39,11 @@ BMS_volt_avg             = A(:, 9);
 BMS_volt_tot             = A(:, 10);
 idx                      = ~isnan(t3);
 
-BMS_V.t                   = t3(idx);
-BMS_V.volt_min             = BMS_volt_min(idx);
-BMS_V.volt_max             = BMS_volt_max(idx);
-BMS_V.volt_avg             = BMS_volt_avg(idx);
-BMS_V.volt_tot             = BMS_volt_tot(idx);
+BMS_V.t                  = t3(idx);
+BMS_V.volt_min           = BMS_volt_min(idx);
+BMS_V.volt_max           = BMS_volt_max(idx);
+BMS_V.volt_avg           = BMS_volt_avg(idx);
+BMS_V.volt_tot           = BMS_volt_tot(idx);
 
 % BMS current and charge
 t4                       = A(:, 11);
@@ -49,7 +52,7 @@ BMS_charge               = A(:, 13);
 idx                      = ~isnan(t4);
 BMS_C.t                  = t4(idx);
 BMS_C.current            = BMS_current(idx);
-BMS_C.charge               = BMS_charge(idx);
+BMS_C.charge             = BMS_charge(idx);
 
 % Accelerometer
 t5                       = A(:, 14);
@@ -58,10 +61,10 @@ accel_y                  = A(:, 16);
 accel_z                  = A(:, 17);
 idx                      = ~isnan(t5);
 
-acc.t                  = t5(idx);
-acc.x                  = accel_x(idx);
-acc.y                  = accel_y(idx);
-acc.z                  = accel_z(idx);
+acc.t                    = t5(idx);
+acc.x                    = accel_x(idx);
+acc.y                    = accel_y(idx);
+acc.z                    = accel_z(idx);
 
 % BMS temperatures
 t6                       = A(:, 18);
@@ -70,10 +73,10 @@ BMS_temp_max             = A(:, 20);
 BMS_temp_avg             = A(:, 21);
 idx                      = ~isnan(t6);
 
-BMS_T.t                    = t6(idx);
-BMS_T.temp_min             = BMS_temp_min(idx);
-BMS_T.temp_max             = BMS_temp_max(idx);
-BMS_T.temp_avg             = BMS_temp_avg(idx);
+BMS_T.t                  = t6(idx);
+BMS_T.temp_min           = BMS_temp_min(idx);
+BMS_T.temp_max           = BMS_temp_max(idx);
+BMS_T.temp_avg           = BMS_temp_avg(idx);
 
 % MC motor temp
 t7                       = A(:, 22);
@@ -88,7 +91,7 @@ t8                       = A(:, 24);
 MC_ps_temp               = A(:, 25);
 idx                      = ~isnan(t8);
 
-MC_PS.t                    = t8(idx);
+MC_PS.t                  = t8(idx);
 MC_PS.temp               = MC_ps_temp(idx);
 
 % MC air temp
@@ -116,3 +119,17 @@ MC.output_voltage        = MC_output_voltage(idx);
 MC.motor_power           = MC_motor_power(idx);
 MC.cmd_current           = MC_cmd_current(idx);
 MC.DC_bus_voltage        = MC_DC_bus_voltage(idx);
+
+% gyroscope data
+t11                      = A(:, 35);
+Gyro_x                   = A(:, 36);
+Gyro_y                   = A(:, 37);
+Gyro_z                   = A(:, 38);
+idx                      = ~isnan(t11);
+Gyro.t                   = t11(idx);
+Gyro.x                   = Gyro_x(idx);
+Gyro.y                   = Gyro_y(idx);
+Gyro.z                   = Gyro_z(idx);
+
+end
+
