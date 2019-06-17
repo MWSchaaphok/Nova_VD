@@ -10,8 +10,14 @@
 %  clear all
 close all 
 addpath('Spherical2AzimuthalEquidistant');
+addpath(genpath('InputFunctions'));
+addpath('Data')
 global Velocity Acc gps LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC Xs Ys Gyro distance  
-global handles
+global handles parsed_osm img_filename
+
+%% Temporary (needs to be incorporated)
+% For plotting map in the background of the GPS coordinates
+track_name = 'Assen';
 
 %% Create data information sheet or load data
 % Check if a data information sheet already exists.
@@ -68,6 +74,14 @@ else
         'MC_m','MC_PS','MC_air','MC');
 end
 
+% Plot the GPS data 
+Map = 'Do you want to plot the gps data on the map? [yes,no,y,n]';
+map = input(Map);
+
+if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
+    [~,Sector,S_nr]= PlotMap(track_name,gps); 
+end 
+
 %% Computations on GPS 
 
 % Transform lon-lat gps coordinates to x,y coordinates and to curv,distance
@@ -97,18 +111,18 @@ else
     N_track    = cumtrapz(dist_track, cos(psi_track));
     E_track    = cumtrapz(dist_track, -sin(psi_track));
     
-    plot(Xs,Ys);
-    hold on
-    plot(E_track,N_track,'k--');
-    hold on
-    [x_left,y_left]     = para_curves(E_track,N_track,-5);
-    [x_right,y_right]   = para_curves(E_track,N_track,5);
-    plot(x_left,y_left,'k-','HandleVisibility','off')
-    plot(x_right,y_right,'k-','HandleVisibility','off')
-    axis equal 
-    xlabel('E')
-    ylabel('N')
-    hold off
+    %plot(Xs,Ys);
+    %hold on
+    %plot(E_track,N_track,'k--');
+    %hold on
+    %[x_left,y_left]     = para_curves(E_track,N_track,-5);
+    %[x_right,y_right]   = para_curves(E_track,N_track,5);
+    %plot(x_left,y_left,'k-','HandleVisibility','off')
+    %plot(x_right,y_right,'k-','HandleVisibility','off')
+    %axis equal 
+    %xlabel('E')
+    %ylabel('N')
+    %hold off
 
     %Compute distance
     % Convert to radians
@@ -166,7 +180,8 @@ Velocity.t = gps.t;
 %Velocity.y = cumtrapz(Acc.t,Acc.y);
 %Velocity.z = cumtrapz(Acc.t,Acc.z);
 
-Velocity.x = [0;diff(distance)'./diff(gps.t)];
+Velocity.x = [0;diff(distance)'./diff(gps.t)]*3.6;
+
 %% Interpolate everything with respect to the distance computed from gps 
 Acc.dist        = interp1(gps.t,distance,Acc.t,'spline','extrap');
 Velocity.dist   = interp1(gps.t, distance, Velocity.t,'spline','extrap');

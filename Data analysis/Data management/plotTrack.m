@@ -1,6 +1,6 @@
 function [] = plotTrack(ploty,sp,sp_nr)
     global Velocity Acc gps LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC Xs Ys Gyro
-    global handles
+    global handles 
     % clear current axist
     cla(sp)
 
@@ -13,24 +13,27 @@ function [] = plotTrack(ploty,sp,sp_nr)
         xlabel(sp,'x [m]');
         ylabel(sp,'y [m]')
         legend(sp,'GPS');
-        hold off
+        hold(sp, 'off')
         handles.graphf1.String = {'No options'};
     else
         var = eval(ploty);
         FN = fieldnames(var);
         z = zeros(size(Xs));
-        col = var.(FN{2});  % This is the color, vary with x in this case.
+        col = interp1(var.t,var.(FN{2}),gps.t);  % This is the color, vary with x in this case.
+        %col = var.dist;
         surface(sp,[Xs Xs],[Ys Ys],[z z],[col col],'facecol','no','edgecol','interp','linew',2);
         xlabel('x [m]')
         ylabel('y [m]')
         colormap jet
-        colorbar
-        axis equal
+        %cb = colorbar;
+        %set(cb, 'Position', [.914 .51 .0181 .4150])
+        %axis equal
+        axis(sp,'equal')
         ttl = strrep(ploty,'_',' ');
         title(sp,[ttl,' over the track'])
         leg = strrep(FN{2},'_',' ');
         legend(sp, leg);
-        hold off
+        hold (sp,'off')
 
         % Find the names of the different possible graphs
         % Update the dropdown menu

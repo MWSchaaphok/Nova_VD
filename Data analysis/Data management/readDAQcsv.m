@@ -21,8 +21,8 @@ gps.t                    = t1(idx);
 gps.latitude             = latitude(idx);
 gps.longitude            = longitude(idx);
 
-gps.longitude            = floor(gps.longitude) + 10*(gps.longitude-floor(gps.longitude));
-gps.latitude             = floor(gps.latitude) + 10*(gps.latitude-floor(gps.latitude));
+%gps.longitude            = floor(gps.longitude) + 10*(gps.longitude-floor(gps.longitude));
+%gps.latitude             = floor(gps.latitude) + 10*(gps.latitude-floor(gps.latitude));
 
 % LV voltage
 t2                       = A(:, 4);
@@ -121,10 +121,10 @@ MC.cmd_current           = MC_cmd_current(idx);
 MC.DC_bus_voltage        = MC_DC_bus_voltage(idx);
 
 % gyroscope data
-t11                      = A(:, 35);
-Gyro_x                   = A(:, 36);
-Gyro_y                   = A(:, 37);
-Gyro_z                   = A(:, 38);
+t11                      = [];%A(:, 35);
+Gyro_x                   = [];%A(:, 36);
+Gyro_y                   = [];%A(:, 37);
+Gyro_z                   = [];%A(:, 38);
 idx                      = ~isnan(t11);
 Gyro.t                   = t11(idx);
 Gyro.x                   = Gyro_x(idx);

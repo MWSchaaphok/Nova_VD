@@ -89,7 +89,7 @@ handles.grapht1.Position = [205 300 100 20];
 handles.graphf1 = uicontrol(panel,'style','popupmenu');
 handles.graphf1.Position = [305 300 100 20];
 handles.graphf1.String = {'No options'};
-handles.graphf1.Callback = @GraphChoice1;
+handles.graphf1.Callback = @(src,event)GraphChoice(src,event,1);
 
 % Subplot 2
 handles.grapht2 = uicontrol(panel,'style','text');
@@ -99,7 +99,7 @@ handles.grapht2.Position = [205 240 100 20];
 handles.graphf2 = uicontrol(panel,'style','popupmenu');
 handles.graphf2.Position = [305 240 100 20];
 handles.graphf2.String = {'No options'};
-handles.graphf2.Callback = @GraphChoice2;
+handles.graphf2.Callback = @(src,event)GraphChoice(src,event,2);
 
 % Subplot 3
 handles.grapht3 = uicontrol(panel,'style','text');
@@ -109,26 +109,26 @@ handles.grapht3.Position = [205 180 100 20];
 handles.graphf3 = uicontrol(panel,'style','popupmenu');
 handles.graphf3.Position = [305 180 100 20];
 handles.graphf3.String = {'No options'};
-handles.graphf3.Callback = @GraphChoice3;
+handles.graphf3.Callback = @(src,event)GraphChoice(src,event,3);
 
 %% Extract figures button
 % Subplot 1
 handles.extract1 = uicontrol(panel,'style','pushbutton');
 handles.extract1.String = 'Extract fig 1';
 handles.extract1.Position = [100 5 80 20];
-handles.extract1.Callback = @extract1;
+handles.extract1.Callback = @(src,event)extract(src,event,1);
 
 % Subplot 2
 handles.extract2 = uicontrol(panel,'style','pushbutton');
 handles.extract2.String = 'Extract fig 2';
 handles.extract2.Position = [200 5 80 20];
-handles.extract2.Callback = @extract2;
+handles.extract2.Callback = @(src,event)extract(src,event,2);
 
 % Subplot 3
 handles.extract3 = uicontrol(panel,'style','pushbutton');
 handles.extract3.String = 'Extract fig 3';
 handles.extract3.Position = [300 5 80 20];
-handles.extract3.Callback = @extract3;
+handles.extract3.Callback = @(src,event)extract(src,event,3);
 
 %% Default Subplots 
 sp1 = subplot(2,2,2);
@@ -181,180 +181,89 @@ sp3.FontSize = 18;
        else
            disp(' This choice is not possible, please select another option.');
        end 
+       hold off
     end
 
-    function extract1(src,event)
-        graph = handles.graphf1.String{handles.graphf1.Value};
-        plot1x = handles.typef1x.String{handles.typef1x.Value};
-        plot1y = handles.typef1y.String{handles.typef1y.Value};   
-        fig = figure(2);
+    function extract(src,event,sbpl)
+        if sbpl == 1
+            graph = handles.graphf1.String{handles.graphf1.Value};
+            plotx = handles.typef1x.String{handles.typef1x.Value};
+            ploty = handles.typef1y.String{handles.typef1y.Value};   
+        elseif sbpl == 2
+            graph = handles.graphf2.String{handles.graphf2.Value};
+            plotx = handles.typef2x.String{handles.typef2x.Value};
+            ploty = handles.typef2y.String{handles.typef2y.Value};             
+        elseif sbpl == 3
+            graph = handles.graphf3.String{handles.graphf3.Value};
+            plotx = handles.typef3x.String{handles.typef3x.Value};
+            ploty = handles.typef3y.String{handles.typef3y.Value};             
+        end
+           
+        figure;
         SP = subplot(1,1,1);
         SP.FontSize = 18; 
         if strcmp(graph,'All')
-            if strcmp(plot1x,'Track')
-                plotTrack(plot1y,SP,4)
-            elseif strcmp(plot1x,'Distance')
-                plotDistance(plot1y,SP,4)
-            elseif strcmp(plot1x, 'Time')
-                plotTime(plot1y,SP,4)
+            if strcmp(plotx,'Track')
+                plotTrack(ploty,SP,4)
+            elseif strcmp(plotx,'Distance')
+                plotDistance(ploty,SP,4)
+            elseif strcmp(plotx, 'Time')
+                plotTime(ploty,SP,4)
             else
                 disp(' This choice is not possible, please select another option.');
             end 
         else 
-            if strcmp(plot1x,'Track')
-               updateTrack(plot1y,graph,SP)
-           elseif strcmp(plot1x,'Distance')
-               updateDistance(plot1y,graph,SP)
-           elseif strcmp(plot1x, 'Time')
-               updateTime(plot1y,graph,SP)
+            if strcmp(plotx,'Track')
+               updateTrack(ploty,graph,SP)
+           elseif strcmp(plotx,'Distance')
+               updateDistance(ploty,graph,SP)
+           elseif strcmp(plotx, 'Time')
+               updateTime(ploty,graph,SP)
            end
         end
     end
 
-    function extract2(src,event)
-        graph = handles.graphf2.String{handles.graphf2.Value};
-        plot2x = handles.typef2x.String{handles.typef2x.Value};
-        plot2y = handles.typef2y.String{handles.typef2y.Value};   
-        fig = figure(3);
-        SP = subplot(1,1,1);
-        SP.FontSize = 18; 
-        if strcmp(graph,'All')
-            if strcmp(plot2x,'Track')
-                plotTrack(plot2y,SP,4)
-            elseif strcmp(plot2x,'Distance')
-                plotDistance(plot2y,SP,4)
-            elseif strcmp(plot2x, 'Time')
-                plotTime(plot2y,SP,4)
-            else
-                disp(' This choice is not possible, please select another option.');
-            end 
-        else 
-           if strcmp(plot2x,'Track')
-               updateTrack(plot2y,graph,SP)
-           elseif strcmp(plot2x,'Distance')
-               updateDistance(plot2y,graph,SP)
-           elseif strcmp(plot2x, 'Time')
-               updateTime(plot2y,graph,SP)
-           end           
-        end
-    end
-
-    function extract3(src,event)
-        graph = handles.graphf3.String{handles.graphf3.Value};
-        plot3x = handles.typef3x.String{handles.typef3x.Value};
-        plot3y = handles.typef3y.String{handles.typef3y.Value};   
-        fig = figure(4);
-        SP = subplot(1,1,1);
-        SP.FontSize = 18; 
-        if strcmp(graph,'All')
-            if strcmp(plot3x,'Track')
-                plotTrack(plot3y,SP,4)
-            elseif strcmp(plot3x,'Distance')
-                plotDistance(plot3y,SP,4)
-            elseif strcmp(plot3x, 'Time')
-                plotTime(plot3y,SP,4)
-            else
-                disp(' This choice is not possible, please select another option.');
-            end 
-        else
-           if strcmp(plot3x,'Track')
-               updateTrack(plot3y,graph,SP)
-           elseif strcmp(plot3x,'Distance')
-               updateDistance(plot3y,graph,SP)
-           elseif strcmp(plot3x, 'Time')
-               updateTime(plot3y,graph,SP)
-           end
-        end
-   end
-
-    function GraphChoice1(src, event)
-        % Read input
-         graph1 = handles.graphf1.String{handles.graphf1.Value};
-         plot1x = handles.typef1x.String{handles.typef1x.Value};
-         plot1y = handles.typef1y.String{handles.typef1y.Value};        
-         % Update the figures with correct graph
-         if strcmp(graph1,'All')
-            
-           if strcmp(plot1x,'Track')
-               plotTrack(plot1y,sp1,1)
-           elseif strcmp(plot1x,'Distance')
-               plotDistance(plot1y,sp1,1)
-           elseif strcmp(plot1x, 'Time')
-               plotTime(plot1y,sp1,1)
-           else
-               disp(' This choice is not possible, please select another option.');
-           end 
-            
-         else
-           if strcmp(plot1x,'Track')
-               updateTrack(plot1y,graph1,sp1)
-           elseif strcmp(plot1x,'Distance')
-               updateDistance(plot1y,graph1,sp1)
-           elseif strcmp(plot1x, 'Time')
-               updateTime(plot1y,graph1,sp1)
-           end
-         end
-         
-    end
-
-    function GraphChoice2(src, event)
-        % Read input
-         graph2 = handles.graphf2.String{handles.graphf2.Value};
-         plot2x = handles.typef2x.String{handles.typef2x.Value};
-         plot2y = handles.typef2y.String{handles.typef2y.Value};        
-         
-         % Update the figures with correct graph
-         if strcmp(graph2,'All')
-            
-           if strcmp(plot2x,'Track')
-               plotTrack(plot2y,sp2,2)
-           elseif strcmp(plot2x,'Distance')
-               plotDistance(plot2y,sp2,2)
-           elseif strcmp(plot2x, 'Time')
-               plotTime(plot2y,sp2,2)
-           else
-               disp(' This choice is not possible, please select another option.');
-           end 
-            
-         else
-           if strcmp(plot2x,'Track')
-               updateTrack(plot2y,graph2,sp2)
-           elseif strcmp(plot2x,'Distance')
-               updateDistance(plot2y,graph2,sp2)
-           elseif strcmp(plot2x, 'Time')
-               updateTime(plot2y,graph2,sp2)
-           end
-         end        
-    end
-
-    function GraphChoice3(src, event)
-        % Read input
-         graph3 = handles.graphf3.String{handles.graphf3.Value};
-         plot3x = handles.typef3x.String{handles.typef3x.Value};
-         plot3y = handles.typef3y.String{handles.typef3y.Value};        
-         % Update the figures with correct graph
-         if strcmp(graph3,'All')
-            
-           if strcmp(plot3x,'Track')
-               plotTrack(plot3y,sp3,3)
-           elseif strcmp(plot3x,'Distance')
-               plotDistance(plot3y,sp3,3)
-           elseif strcmp(plot3x, 'Time')
-               plotTime(plot3y,sp3,3)
-           else
-               disp(' This choice is not possible, please select another option.');
-           end 
-            
-         else
-           if strcmp(plot3x,'Track')
-               updateTrack(plot3y,graph3,sp3)
-           elseif strcmp(plot3x,'Distance')
-               updateDistance(plot3y,graph3,sp3)
-           elseif strcmp(plot3x, 'Time')
-               updateTime(plot3y,graph3,sp3)
-           end
-         end
+    function GraphChoice(src, event,sbpl)
+        if sbpl == 1
+            graph = handles.graphf1.String{handles.graphf1.Value};
+            plotx = handles.typef1x.String{handles.typef1x.Value};
+            ploty = handles.typef1y.String{handles.typef1y.Value}; 
+            sp = sp1;
+        elseif sbpl == 2
+            graph = handles.graphf2.String{handles.graphf2.Value};
+            plotx = handles.typef2x.String{handles.typef2x.Value};
+            ploty = handles.typef2y.String{handles.typef2y.Value}; 
+            sp = sp2;
+        elseif sbpl == 3
+            graph = handles.graphf3.String{handles.graphf3.Value};
+            plotx = handles.typef3x.String{handles.typef3x.Value};
+            ploty = handles.typef3y.String{handles.typef3y.Value};    
+            sp = sp3;
+        end     
         
+         % Update the figures with correct graph
+         if strcmp(graph,'All')
+            
+           if strcmp(plotx,'Track')
+               plotTrack(ploty,sp,sbpl)
+           elseif strcmp(plotx,'Distance')
+               plotDistance(ploty,sp,sbpl)
+           elseif strcmp(plotx, 'Time')
+               plotTime(ploty,sp,sbpl)
+           else
+               disp(' This choice is not possible, please select another option.');
+           end 
+            
+         else
+           if strcmp(plotx,'Track')
+               updateTrack(ploty,graph,sp)
+           elseif strcmp(plotx,'Distance')
+               updateDistance(ploty,graph,sp)
+           elseif strcmp(plotx, 'Time')
+               updateTime(ploty,graph,sp)
+           end
+         end
+         
     end
 end 
 

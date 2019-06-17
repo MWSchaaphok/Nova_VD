@@ -18,8 +18,8 @@
 % 2010.11.25 (c) Ioannis Filippidis, jfilippidis@gmail.com
 
 %% name file
-openstreetmap_filename = 'map.osm';
-map_img_filename = 'map.png'; % image file saved from online, if available
+openstreetmap_filename = 'Campus_map.osm';
+map_img_filename = 'Campus_map.png'; % image file saved from online, if available
 
 %% convert XML -> MATLAB struct
 % convert the OpenStreetMap XML Data file donwloaded as map.osm
@@ -51,10 +51,11 @@ fig = figure;
 ax = axes('Parent', fig);
 hold(ax, 'on')
 %bounds = [-300 300; -300 300];
+bounds = parsed_osm.bounds; 
 show_map(ax, bounds, map_img_filename)
 % plot the network, optionally a raster image can also be provided for the
 % map under the vector graphics of the network
-plot_way(ax, parsed_osm)
+%plot_way(ax, parsed_osm)
 %plot_way(ax, parsed_osm, map_img_filename) % if you also have a raster image
 
 %plot_route(ax, route, parsed_osm)
@@ -63,5 +64,5 @@ plot_way(ax, parsed_osm)
 
 % show intersection nodes (unseful, but may result into a cluttered plot)
 %plot_nodes(ax, parsed_osm, intersection_node_indices)
-
+plot(ax,gps.longitude, gps.latitude,'r','Linewidth',2)
 hold(ax, 'off')

@@ -1,5 +1,5 @@
 Name team member: .
-Test date: 1-5-2019.
+Test date: 6-6-2019.
 File name test data: C:\Users\Marianne\Documents\GitHub\Nova_VD\Data analysis\Data management\20170626_1941.278.daq.
 Type of test: Dynometer.
 Track: .
