@@ -12,10 +12,16 @@ function [parsed_osm,Sector,S_nr] = PlotMap(track_name,gps)
     plot(ax,gps.longitude, gps.latitude,'r','LineWidth',2);
     title('GPS data')
     hold on; 
-    [Sector,S_nr] = Sectors(gps,track_name);
-    for i = 1:S_nr
-        name = strcat('S',num2str(i));
-        hold on; plot(Sector.(name).coord(:,2), Sector.(name).coord(:,1),'k'); hold off
+    try
+        [Sector,S_nr] = Sectors(gps,track_name);
+        for i = 1:S_nr
+            name = strcat('S',num2str(i));
+            hold on; plot(Sector.(name).coord(:,2), Sector.(name).coord(:,1),'k'); hold off
+        end
+    catch 
+        frprintf('No sectors available')
+        Sector = [];
+        S_nr = 0; 
     end
 %     %% Plot sector
 %     S1 = [4.3743 52.0055;4.3723 52.007;4.3715 52.007;4.3741  52.0053;4.3743 52.0055];

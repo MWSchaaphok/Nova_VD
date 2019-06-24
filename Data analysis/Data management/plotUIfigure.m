@@ -1,4 +1,4 @@
-function [f,sp1,sp2,sp3,handles] = plotUIfigure()
+function [f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr)
 
 %% Initialization
 %global Velocity Acc GPS LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC Xs Ys
@@ -130,6 +130,15 @@ handles.extract3.String = 'Extract fig 3';
 handles.extract3.Position = [300 5 80 20];
 handles.extract3.Callback = @(src,event)extract(src,event,3);
 
+%% Sector checkboxes 
+for k = 1:S_nr
+    name = ['S',num2str(k)];
+    handles.sector.(name) = uicontrol(panel,'style','checkbox');
+    handles.sector.(name).String = ['Sector',num2str(k)];
+    handles.sector.(name).Position = [450 330-15*k 100 15 ];
+    handles.sector.(name).Value = 1;
+    %handles.sector.Callback = @(src,event)extract(src,event,1);
+end
 %% Default Subplots 
 sp1 = subplot(2,2,2);
 sp1.FontSize = 18; 
@@ -151,37 +160,50 @@ sp3.FontSize = 18;
        disp(['Plot 1: ',plot1x, ' - ',plot1y, '.']);
        disp(['Plot 2: ',plot2x,' - ',plot2y, '.']);
        disp(['Plot 3: ',plot3x,' - ',plot3y, '.']);
-       
-       if strcmp(plot1x,'Track')
-           plotTrack(plot1y,sp1,1)
-       elseif strcmp(plot1x,'Distance')
-           plotDistance(plot1y,sp1,1)
-       elseif strcmp(plot1x, 'Time')
-           plotTime(plot1y,sp1,1)
-       else
-           disp(' This choice is not possible, please select another option.');
-       end 
-       
-       if strcmp(plot2x,'Track')
-           plotTrack(plot2y,sp2,2)
-       elseif strcmp(plot2x,'Distance')
-           plotDistance(plot2y,sp2,2)
-       elseif strcmp(plot2x, 'Time')
-           plotTime(plot2y,sp2,2)
-       else
-           disp(' This choice is not possible, please select another option.');
-       end 
-       
-       if strcmp(plot3x,'Track')
-           plotTrack(plot3y,sp3,3)
-       elseif strcmp(plot3x,'Distance')
-           plotDistance(plot3y,sp3,3)
-       elseif strcmp(plot3x, 'Time')
-           plotTime(plot3y,sp3,3)
-       else
-           disp(' This choice is not possible, please select another option.');
-       end 
-       hold off
+       nr_sect_plot = 0;
+       Sect_plot = [];
+       for i = 1:S_nr
+           sect = ['S',num2str(i)];
+           value = handles.sector.(sect).Value;
+           nr_sect_plot = nr_sect_plot + value; 
+           if value ==1
+               Sect_plot = [Sect_plot,i];
+           end
+       end
+       if S_nr == 0 || nr_sect_plot == S_nr
+           if strcmp(plot1x,'Track')
+               plotTrack(plot1y,sp1,1)
+           elseif strcmp(plot1x,'Distance')
+               plotDistance(plot1y,sp1,1)
+           elseif strcmp(plot1x, 'Time')
+               plotTime(plot1y,sp1,1)
+           else
+               disp(' This choice is not possible, please select another option.');
+           end 
+
+           if strcmp(plot2x,'Track')
+               plotTrack(plot2y,sp2,2)
+           elseif strcmp(plot2x,'Distance')
+               plotDistance(plot2y,sp2,2)
+           elseif strcmp(plot2x, 'Time')
+               plotTime(plot2y,sp2,2)
+           else
+               disp(' This choice is not possible, please select another option.');
+           end 
+
+           if strcmp(plot3x,'Track')
+               plotTrack(plot3y,sp3,3)
+           elseif strcmp(plot3x,'Distance')
+               plotDistance(plot3y,sp3,3)
+           elseif strcmp(plot3x, 'Time')
+               plotTime(plot3y,sp3,3)
+           else
+               disp(' This choice is not possible, please select another option.');
+           end 
+           hold off
+       else 
+           fprintf('We plot only the selected sectors...\n Still needs to be implemented')
+        end
     end
 
     function extract(src,event,sbpl)

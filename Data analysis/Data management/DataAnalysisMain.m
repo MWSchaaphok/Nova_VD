@@ -7,7 +7,7 @@
 %  By: Marianne Schaaphok
 %  Year: 2019
 
-%  clear all
+clear all
 close all 
 addpath('Spherical2AzimuthalEquidistant');
 addpath(genpath('InputFunctions'));
@@ -79,7 +79,15 @@ Map = 'Do you want to plot the gps data on the map? [yes,no,y,n]';
 map = input(Map);
 
 if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
-    [~,Sector,S_nr]= PlotMap(track_name,gps); 
+    [~,Sector,S_nr]= PlotMap(track_name,gps);
+else
+    try 
+        [Sector,S_nr] = Sectors(gps,track_name);
+    catch
+        fprintf('No sectors available')
+        Sector = [];
+        S_nr = 0;
+    end
 end 
 
 %% Computations on GPS 
@@ -197,7 +205,7 @@ Gyro.dist       = interp1(gps.t,distance,Gyro.t,'spline','extrap');
 
 %% Plot data
 
-[f,sp1,sp2,sp3,handles] = plotUIfigure();
+[f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr);
 
 % Default plots - velocity along track + max speed reached
 %               - acceleration over distance
