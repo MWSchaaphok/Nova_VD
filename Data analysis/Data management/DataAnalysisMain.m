@@ -10,14 +10,11 @@
 clear all
 close all 
 addpath('Spherical2AzimuthalEquidistant');
-addpath(genpath('InputFunctions'));
+addpath(genpath('Functions'))
 addpath('Data')
-global Velocity Acc gps LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC Xs Ys Gyro distance  
+global Velocity Acc gps BMS_V BMS_C BMS_T MC_m MC_PS MC Xs Ys Gyro distance 
+global MC_Current MC_Speed MC_Voltage MC_Flux MC_Fault MC_Torque 
 global handles parsed_osm img_filename
-
-%% Temporary (needs to be incorporated)
-% For plotting map in the background of the GPS coordinates
-track_name = 'Assen';
 
 %% Create data information sheet or load data
 % Check if a data information sheet already exists.
@@ -42,8 +39,23 @@ if strcmp(datasheet,'no') || strcmp(datasheet,'n')|| strcmp(datasheet,'No')
     %dataset = load(data.DAQfile);
     if strcmp(data.DAQfile(end-3:end),'.csv')
         fprintf('Reading CSV file...\n');
-        [gps,LV,BMS_V,BMS_C,BMS_T,Acc,MC_m,MC_PS,MC_air,MC] = readDAQcsv(data.DAQfile);
-        fprintf('Finished reading\n');
+        try
+            [gps,Acc,Gyro,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] =readDAQcsv(data.DAQfile);
+        catch
+            [gps,LV,BMS_V,BMS_C,BMS_T,Acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv_old(data.DAQfile);
+            MC_Speed.t = [];
+            MC_Speed.speed = [];
+            MC_Current.t = [];
+            MC_Current.c = [];
+            MC_Voltage.volt = [];
+            MC_Flux.t = [];
+            MC_Flux.flux = [];
+            MC_Fault.t = [];
+            MC_Fault.F = [];
+            MC_Torque.t = [];
+            MC_Torque.T = [];
+        end
+            fprintf('Finished reading\n');
     else
         fprintf('Loading matlab file...\n')
         load(data.DAQfile)
@@ -62,33 +74,34 @@ else
         %dataset = load(fullfile(path,file));
     end
     if strcmp(file(end-3:end),'.csv')
-        fprintf('Reading CSV file...\n');
-        [gps,LV,BMS_V,BMS_C,BMS_T,Acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv(fullfile(path,file));
+        fprintf('Reading CSV file...\n');        
+        try
+            [gps,Acc,Gyro,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] =readDAQcsv(fullfile(path,file));
+        catch
+            [gps,LV,BMS_V,BMS_C,BMS_T,Acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv_old(fullfile(path,file));
+            MC_Speed.t = [];
+            MC_Speed.speed = [];
+            MC_Current.t = [];
+            MC_Current.c = [];
+            MC_Voltage.t = [];
+            MC_Voltage.volt = [];
+            MC_Flux.t = [];
+            MC_Flux.flux = [];
+            MC_Fault.t = [];
+            MC_Fault.F = [];
+            MC_Torque.t = [];
+            MC_Torque.T = [];
+        end
+        %[gps,Acc,Gyro,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] = readDAQcsv(fullfile(path,file));
         fprintf('Finished reading\n');
     else
         fprintf('Loading matlab file...\n')
         load(fullfile(path,file))
         fprintf('Finished reading\n');
     end
-    save([file(1:end-3),'.mat'],'gps','LV','BMS_V','BMS_C','BMS_T','Acc',...
-        'MC_m','MC_PS','MC_air','MC');
+    %save([file(1:end-3),'.mat'],'gps','Acc','Gyro','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+    %    ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque');
 end
-
-% Plot the GPS data 
-Map = 'Do you want to plot the gps data on the map? [yes,no,y,n]';
-map = input(Map);
-
-if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
-    [~,Sector,S_nr]= PlotMap(track_name,gps);
-else
-    try 
-        [Sector,S_nr] = Sectors(gps,track_name);
-    catch
-        fprintf('No sectors available')
-        Sector = [];
-        S_nr = 0;
-    end
-end 
 
 %% Computations on GPS 
 
@@ -109,15 +122,15 @@ else
     Ys = Ys - Ys(1); 
     
     % Compute and plot the track 
-    load('Assen_middle_1m.mat');
+    %load('Assen_middle_1m.mat');
     % Adapt track array 
-    curv_track    = [curv(1),curv];
-    dist_track    = cumsum([0,dist]);
+    %curv_track    = [curv(1),curv];
+    %dist_track    = cumsum([0,dist]);
    
     % Define and save track
-    psi_track  = cumtrapz(dist_track,curv_track);
-    N_track    = cumtrapz(dist_track, cos(psi_track));
-    E_track    = cumtrapz(dist_track, -sin(psi_track));
+    %psi_track  = cumtrapz(dist_track,curv_track);
+    %N_track    = cumtrapz(dist_track, cos(psi_track));
+    %E_track    = cumtrapz(dist_track, -sin(psi_track));
     
     %plot(Xs,Ys);
     %hold on
@@ -145,7 +158,7 @@ else
     end 
     
     distance = distance*60*180/pi*1.852*1000;         % Convert to meters 
-    distance = cumsum(distance); 
+    distance = cumsum(abs(distance)); 
     
     %Compute curvature from (E,N) coordinates 
     %%%%% STILL NEED TO DEFINE LEFT RIGHT CURVES%%%%
@@ -184,28 +197,52 @@ end
 
 %% Computations velocity/roll
 Velocity.t = gps.t;
-%Velocity.x = cumtrapz(Acc.t,Acc.x);
-%Velocity.y = cumtrapz(Acc.t,Acc.y);
-%Velocity.z = cumtrapz(Acc.t,Acc.z);
-
 Velocity.x = [0;diff(distance)'./diff(gps.t)]*3.6;
 
 %% Interpolate everything with respect to the distance computed from gps 
 Acc.dist        = interp1(gps.t,distance,Acc.t,'spline','extrap');
 Velocity.dist   = interp1(gps.t, distance, Velocity.t,'spline','extrap');
-LV.dist         = interp1(gps.t,distance,LV.t,'spline','extrap');
 BMS_V.dist      = interp1(gps.t,distance,BMS_V.t,'spline','extrap');
 BMS_C.dist      = interp1(gps.t,distance,BMS_C.t,'spline','extrap');
 BMS_T.dist      = interp1(gps.t,distance,BMS_T.t,'spline','extrap');
 MC_m.dist       = interp1(gps.t,distance,MC_m.t,'spline','extrap');
 MC_PS.dist      = interp1(gps.t,distance,MC_PS.t,'spline','extrap');
-MC_air.dist     = interp1(gps.t,distance,MC_air.t,'spline','extrap');
-MC.dist         = interp1(gps.t,distance,MC.t,'spline','extrap');
+MC_Speed.dist   = interp1(gps.t,distance,MC_Speed.t,'spline','extrap');
+MC_Current.dist   = interp1(gps.t,distance,MC_Current.t,'spline','extrap');
+MC_Voltage.dist   = interp1(gps.t,distance,MC_Voltage.t,'spline','extrap');
+MC_Fault.dist   = interp1(gps.t,distance,MC_Fault.t,'spline','extrap');
+MC_Flux.dist   = interp1(gps.t,distance,MC_Flux.t,'spline','extrap');
+MC_Torque.dist   = interp1(gps.t,distance,MC_Torque.t,'spline','extrap');
 Gyro.dist       = interp1(gps.t,distance,Gyro.t,'spline','extrap');
 
-%% Plot data
+%% Separate laps
 
-[f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr);
+%% Plot data
+% Plot the GPS data 
+Map = 'Do you want to plot the gps data on the map? [yes,no,y,n]';
+map = input(Map);
+
+% For sector definitions
+Trackname = 'Select one of the following tracks in order to plot sectors [Assen, ]';
+track_name = input(Trackname);
+
+if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
+    [~,Sector,S_nr]= PlotMap(track_name,gps,distance);
+else
+    try 
+        [Sector,S_nr] = Sectors(gps,track_name,distance);
+    catch
+        fprintf('No sectors available')
+        Sector = [];
+        S_nr = 0;
+    end
+end 
+
+% Plot 3 subplot GUI for time/distance/track plotting
+[f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr,Sector);
+
+% Plot 4 subplot distance channel GUI
+[f_ch,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_hndls] = plotChannelfigure(Sector, S_nr);
 
 % Default plots - velocity along track + max speed reached
 %               - acceleration over distance
@@ -213,7 +250,7 @@ Gyro.dist       = interp1(gps.t,distance,Gyro.t,'spline','extrap');
 
 plotTrack('GPS',sp1,1);
 handles.typef1x.Value = 1;
-handles.typef1y.Value = 3;
+handles.typef1y.Value = 1;
 
 plotDistance('BMS_T',sp2,2)
 handles.typef2x.Value = 2; 

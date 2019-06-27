@@ -1,6 +1,6 @@
 % script reads csv of DAQ data and saves proper variables
 % Thies Oelerich & Marianne Schaaphok
-function [gps,LV,BMS_V,BMS_C,BMS_T,acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv(file)
+function [gps,LV,BMS_V,BMS_C,BMS_T,acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv_old(file)
 
 % Read all contents of csv file in one big matrix
 %A = csvread(file,1,0);

@@ -1,9 +1,10 @@
-function [] = plotDistance(ploty,sp,sp_nr)
-    global Velocity Acc gps LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC distance Gyro
-    global handles 
+function [] = plotDistance(ploty,sp,sp_nr,hndls)
+    global Velocity Acc gps BMS_V BMS_C BMS_T MC_m MC_PS distance Gyro
+    global MC_Current MC_Speed MC_Voltage MC_Flux MC_Fault MC_Torque 
     % Clear current axis
-    cla(sp)
+    
 
+    cla(sp)
     % Plot all graphs from category
     var = eval(ploty);
     FN = fieldnames(var);
@@ -20,6 +21,7 @@ function [] = plotDistance(ploty,sp,sp_nr)
     legend(sp,leg{:})
     hold(sp, 'off')
 
+
     % Find the names of the different possible graphs
     % Update the dropdown menu
     if sp_nr == 1 
@@ -27,18 +29,24 @@ function [] = plotDistance(ploty,sp,sp_nr)
         for i = 2:num
             NewStr{i} = FN{i};
         end
-        handles.graphf1.String = NewStr;
+        hndls.graphf1.String = NewStr;
     elseif sp_nr == 2
         NewStr{1} = 'All';
         for i = 2:num
             NewStr{i} = FN{i};
         end
-        handles.graphf2.String = NewStr;            
+        hndls.graphf2.String = NewStr;            
     elseif sp_nr == 3
         NewStr{1} = 'All';
         for i = 2:num
             NewStr{i} = FN{i};
         end
-        handles.graphf3.String = NewStr;            
+        hndls.graphf3.String = NewStr; 
+    elseif sp_nr == 4
+        NewStr{1} = 'All';
+        for i = 2:num
+            NewStr{i} = FN{i};
+        end
+        hndls.graphf4.String = NewStr; 
     end 
 end 

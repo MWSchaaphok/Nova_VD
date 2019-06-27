@@ -1,4 +1,4 @@
-function [f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr)
+function [f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr,Sector)
 
 %% Initialization
 %global Velocity Acc GPS LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC Xs Ys
@@ -26,7 +26,8 @@ handles.ylabelf1.Position = [5 280 100 20];
 
 handles.typef1y = uicontrol(panel,'style','popupmenu');
 handles.typef1y.Position = [105 280 100 20];
-handles.typef1y.String = {'Velocity','Acc','GPS','LV','BMS_V','BMS_C','BMS_T','MC_m','MC_PS','MC_air','MC','Gyro'};
+handles.typef1y.String = {'gps','Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
 
 %% Handles Subfigure 2
 handles.textf2 = uicontrol(panel,'style','text');
@@ -49,7 +50,8 @@ handles.ylabelf2.Position = [5 220 100 20];
 
 handles.typef2y = uicontrol(panel,'style','popupmenu');
 handles.typef2y.Position = [105 220 100 20];
-handles.typef2y.String = {'Velocity','Acc','GPS','LV','BMS_V','BMS_C','BMS_T','MC_m','MC_PS','MC_air','MC','Gyro'};
+handles.typef2y.String = {'gps','Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
 
 %% Handles Subfigure 3
 handles.textf3 = uicontrol(panel,'style','text');
@@ -72,7 +74,8 @@ handles.ylabelf3.Position = [5 160 100 20];
 
 handles.typef3y = uicontrol(panel,'style','popupmenu');
 handles.typef3y.Position = [105 160 100 20];
-handles.typef3y.String = {'Velocity','Acc','GPS','LV','BMS_V','BMS_C','BMS_T','MC_m','MC_PS','MC_air','MC','Gyro'};
+handles.typef3y.String = {'gps','Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
 
 %% Refresh button
 handles.refresh = uicontrol(panel,'style','pushbutton');
@@ -174,7 +177,7 @@ sp3.FontSize = 18;
            if strcmp(plot1x,'Track')
                plotTrack(plot1y,sp1,1)
            elseif strcmp(plot1x,'Distance')
-               plotDistance(plot1y,sp1,1)
+               plotDistance(plot1y,sp1,1,handles)
            elseif strcmp(plot1x, 'Time')
                plotTime(plot1y,sp1,1)
            else
@@ -184,7 +187,7 @@ sp3.FontSize = 18;
            if strcmp(plot2x,'Track')
                plotTrack(plot2y,sp2,2)
            elseif strcmp(plot2x,'Distance')
-               plotDistance(plot2y,sp2,2)
+               plotDistance(plot2y,sp2,2,handles)
            elseif strcmp(plot2x, 'Time')
                plotTime(plot2y,sp2,2)
            else
@@ -194,7 +197,7 @@ sp3.FontSize = 18;
            if strcmp(plot3x,'Track')
                plotTrack(plot3y,sp3,3)
            elseif strcmp(plot3x,'Distance')
-               plotDistance(plot3y,sp3,3)
+               plotDistance(plot3y,sp3,3,handles)
            elseif strcmp(plot3x, 'Time')
                plotTime(plot3y,sp3,3)
            else
@@ -202,7 +205,37 @@ sp3.FontSize = 18;
            end 
            hold off
        else 
-           fprintf('We plot only the selected sectors...\n Still needs to be implemented')
+           fprintf('We plot only the selected sectors...\nStill needs to be implemented\n')
+            if strcmp(plot1x,'Track')
+               plotTrack(plot1y,sp1,1)
+           elseif strcmp(plot1x,'Distance')
+               plotDistance(plot1y,sp1,1,handles)
+           elseif strcmp(plot1x, 'Time')
+               plotTime(plot1y,sp1,1)
+           else
+               disp(' This choice is not possible, please select another option.');
+           end 
+
+           if strcmp(plot2x,'Track')
+               plotTrack(plot2y,sp2,2)
+           elseif strcmp(plot2x,'Distance')
+               plotDistance(plot2y,sp2,2,handles)
+           elseif strcmp(plot2x, 'Time')
+               plotTime(plot2y,sp2,2)
+           else
+               disp(' This choice is not possible, please select another option.');
+           end 
+
+           if strcmp(plot3x,'Track')
+               plotTrack(plot3y,sp3,3)
+           elseif strcmp(plot3x,'Distance')
+               plotDistance(plot3y,sp3,3,handles)
+           elseif strcmp(plot3x, 'Time')
+               plotTime(plot3y,sp3,3)
+           else
+               disp(' This choice is not possible, please select another option.');
+           end 
+           hold off          
         end
     end
 
@@ -228,7 +261,7 @@ sp3.FontSize = 18;
             if strcmp(plotx,'Track')
                 plotTrack(ploty,SP,4)
             elseif strcmp(plotx,'Distance')
-                plotDistance(ploty,SP,4)
+                plotDistance(ploty,SP,4,handles)
             elseif strcmp(plotx, 'Time')
                 plotTime(ploty,SP,4)
             else
@@ -269,7 +302,7 @@ sp3.FontSize = 18;
            if strcmp(plotx,'Track')
                plotTrack(ploty,sp,sbpl)
            elseif strcmp(plotx,'Distance')
-               plotDistance(ploty,sp,sbpl)
+               plotDistance(ploty,sp,sbpl,handles)
            elseif strcmp(plotx, 'Time')
                plotTime(ploty,sp,sbpl)
            else

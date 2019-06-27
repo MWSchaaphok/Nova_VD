@@ -1,5 +1,6 @@
 function [] = plotTrack(ploty,sp,sp_nr)
-    global Velocity Acc gps LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC Xs Ys Gyro
+    global Velocity Acc gps BMS_V BMS_C BMS_T MC_m MC_PS Xs Ys Gyro
+    global MC_Current MC_Speed MC_Voltage MC_Flux MC_Fault MC_Torque 
     global handles 
     % clear current axist
     cla(sp)
@@ -19,7 +20,7 @@ function [] = plotTrack(ploty,sp,sp_nr)
         var = eval(ploty);
         FN = fieldnames(var);
         z = zeros(size(Xs));
-        col = interp1(var.t,var.(FN{2}),gps.t);  % This is the color, vary with x in this case.
+        col = interp1(var.t,var.(FN{2}),gps.t,'spline','extrap');  % This is the color, vary with x in this case.
         %col = var.dist;
         surface(sp,[Xs Xs],[Ys Ys],[z z],[col col],'facecol','no','edgecol','interp','linew',2);
         xlabel('x [m]')

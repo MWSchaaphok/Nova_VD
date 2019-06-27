@@ -1,5 +1,6 @@
 function [] = plotTime(ploty,sp,sp_nr)
-   global Velocity Acc gps LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC Gyro
+   global MC_Current MC_Speed MC_Voltage MC_Flux MC_Fault MC_Torque 
+   global Velocity Acc gps BMS_V BMS_C BMS_T MC_m MC_PS MC Gyro
    global handles
     % Clear current axis
     cla(sp)
@@ -39,6 +40,12 @@ function [] = plotTime(ploty,sp,sp_nr)
         for i = 2:num
             NewStr{i} = FN{i};
         end
-        handles.graphf3.String = NewStr;            
+        handles.graphf3.String = NewStr;      
+    elseif sp_nr == 4
+        NewStr{1} = 'All';
+        for i = 2:num
+            NewStr{i} = FN{i};
+        end
+        handles.graphf4.String = NewStr;
     end 
 end 

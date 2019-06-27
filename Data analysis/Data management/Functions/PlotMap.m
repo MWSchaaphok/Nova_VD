@@ -1,4 +1,4 @@
-function [parsed_osm,Sector,S_nr] = PlotMap(track_name,gps)
+function [parsed_osm,Sector,S_nr] = PlotMap(track_name,gps,distance)
     osm_filename = strcat(track_name,'_map.osm');
     img_filename = strcat(track_name,'_map.png');
     
@@ -13,13 +13,13 @@ function [parsed_osm,Sector,S_nr] = PlotMap(track_name,gps)
     title('GPS data')
     hold on; 
     try
-        [Sector,S_nr] = Sectors(gps,track_name);
+        [Sector,S_nr] = Sectors(gps,track_name,distance);
         for i = 1:S_nr
             name = strcat('S',num2str(i));
             hold on; plot(Sector.(name).coord(:,2), Sector.(name).coord(:,1),'k'); hold off
         end
     catch 
-        frprintf('No sectors available')
+        fprintf('No sectors available')
         Sector = [];
         S_nr = 0; 
     end
