@@ -173,24 +173,24 @@ GyroAccel.dist  = interp1(gps.t,distance,GyroAccel.t,'spline','extrap');
 
 %% Make sectors + Plot on Map
 % Plot the GPS data 
-%Map = 'Do you want to plot the gps data on the map? [yes,no,y,n]';
-%map = input(Map);
+Map = 'Do you want to plot the gps data on the map? [yes,no,y,n]';
+map = input(Map);
 
 % For sector definitions
-%Trackname = 'Select one of the following tracks in order to plot sectors [Assen, ]';
-%track_name = input(Trackname);
+Trackname = 'Select one of the following tracks in order to plot sectors [Assen, ]';
+track_name = input(Trackname);
 
-%if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
-%    [~,Sector,S_nr]= PlotMap(track_name,gps,distance);
-%else
-try 
-    [Sector,S_nr] = Sectors(gps,track_name,distance);
-catch
-    fprintf('No sectors available\n')
-    Sector = [];
-    S_nr = 0;
-end
-%end 
+if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
+    [~,Sector,S_nr]= PlotMap(track_name,gps,distance);
+else
+    try 
+        [Sector,S_nr] = Sectors(gps,track_name,distance);
+    catch
+        fprintf('No sectors available\n')
+        Sector = [];
+        S_nr = 0;
+    end
+end 
 
 %% Separate laps
 if S_nr == 0 

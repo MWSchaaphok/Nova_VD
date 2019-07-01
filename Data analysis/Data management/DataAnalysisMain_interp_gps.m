@@ -79,6 +79,15 @@ else
             [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] =readDAQcsv_new(fullfile(path,file));
         catch
             [gps,LV,BMS_V,BMS_C,BMS_T,Acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv_old(fullfile(path,file));
+            Angle.t = [];
+            Angle = [];
+            GyroAccel.t = [];
+            GyroAccel.IAx = [];
+            GyroAccel.IAy = [];
+            GyroAccel.IAz = [];
+            GyroAccel.Gx = [];
+            GyroAccel.Gy = [];
+            GyroAccel.Gz = [];
             MC_Speed.t = [];
             MC_Speed.speed = [];
             MC_Current.t = [];
@@ -201,8 +210,8 @@ end
 % Compute velocity from GPS data and from Accelerations 
 Velocity.t = gps.t;
 Velocity.x_gps = [0;diff(distance)'./diff(gps.t)]*3.6;
-Velocity.x_acc = cumtrapz(GyroAccel.t,GyroAccel.IAx*9.81);
-Velocity.x_acc = interp1(GyroAccel.t,Velocity.x_acc,gps.t,'spline','extrap');
+%Velocity.x_acc = cumtrapz(GyroAccel.t,GyroAccel.IAx*9.81);
+%Velocity.x_acc = interp1(GyroAccel.t,Velocity.x_acc,gps.t,'spline','extrap');
 
 % Use complementary filter to combine information for the angles:
 % filtered_angle = HPF*( filtered_angle + w* dt) + LPF*(angle_accel); where HPF + LPF = 1
@@ -220,24 +229,12 @@ for i = 2:length(GyroAccel.t)
     pitch(i) = HPF*(pitch(i-1) + (GyroAccel.t(i)-GyroAccel.t(i-1))*GyroAccel.Gy(i)) + LPF*Angle.AccelIY(i);
     
 end
-Angle.lean = roll;
+Angle.roll = roll;
 Angle.pitch = pitch; 
 Angle.yaw = yaw;
-%% Interpolate everything with respect to the distance computed from gps 
-Angle.dist      = interp1(gps.t,distance,Angle.t,'spline','extrap');
-Velocity.dist   = interp1(gps.t, distance, Velocity.t,'spline','extrap');
-BMS_V.dist      = interp1(gps.t,distance,BMS_V.t,'spline','extrap');
-BMS_C.dist      = interp1(gps.t,distance,BMS_C.t,'spline','extrap');
-BMS_T.dist      = interp1(gps.t,distance,BMS_T.t,'spline','extrap');
-MC_m.dist       = interp1(gps.t,distance,MC_m.t,'spline','extrap');
-MC_PS.dist      = interp1(gps.t,distance,MC_PS.t,'spline','extrap');
-MC_Speed.dist   = interp1(gps.t,distance,MC_Speed.t,'spline','extrap');
-MC_Current.dist = interp1(gps.t,distance,MC_Current.t,'spline','extrap');
-MC_Voltage.dist = interp1(gps.t,distance,MC_Voltage.t,'spline','extrap');
-MC_Fault.dist   = interp1(gps.t,distance,MC_Fault.t,'spline','extrap');
-MC_Flux.dist    = interp1(gps.t,distance,MC_Flux.t,'spline','extrap');
-MC_Torque.dist  = interp1(gps.t,distance,MC_Torque.t,'spline','extrap');
-GyroAccel.dist  = interp1(gps.t,distance,GyroAccel.t,'spline','extrap');
+%% Interpolate everything with respect to the time scale of the gps
+gps.dist = distance;
+[Angle,Velocity,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] = interpolate2gps(gps,Angle,Velocity,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque);
 
 %% Make sectors + Plot on Map
 % Plot the GPS data 
@@ -245,7 +242,7 @@ Map = 'Do you want to plot the gps data on the map? [yes,no,y,n]';
 map = input(Map);
 
 % For sector definitions
-Trackname = 'Select one of the following tracks in order to plot sectors [Assen, ]';
+Trackname = 'Select one of the following tracks in order to plot sectors [Assen,Campus, ]';
 track_name = input(Trackname);
 
 if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
@@ -265,7 +262,14 @@ if S_nr == 0
     fprintf('No sectors available to seperate laps\n')
 else 
     fprintf('Assuming first sector starts at the start/finish line\n')
-    
+    S1_inds = find(Sector.S1.ind == 1);
+    next_lap = [0,;find(diff(S1_inds)>1)];
+    for i=2:size(next_lap)
+        name = strcat('L',num2str(i-1));
+        lap.(name) = Sector.S1.ind(S1_inds(next_lap(i-1)+1):S1_inds(next_lap(i)+1)-1);
+    end
+    name = strcat('L',num2str(i));
+    lap.(name) = Sector.S1.ind(S1_inds(next_lap(i)+1):end);
     fprintf('Laps seperated\n')
 end
 
@@ -299,3 +303,26 @@ function [collinear] = pointsAreCollinear(xy)
        collinear = 1; 
     end 
 end 
+
+function [varargout] = interpolate2gps(gps,varargin)
+    % Note that varargout must equal varargin and be the same order!
+    nin = nargin; 
+    nout = nargout;
+    if nin-1~= nout
+       fprintf('Number of inputs unequal number of outputs');
+       return 
+    end
+    for n = 1:nin-1
+        FN = fieldnames(varargin{n});
+        num = numel(FN);
+        varargout{n}.t = gps.t;
+        for j = 2:num
+            try
+                varargout{n}.(FN{j}) = interp1(varargin{n}.t,varargin{n}.(FN{j}),gps.t,'spline',NaN);
+            catch
+                varargout{n}.(FN{j}) = [];
+            end
+        end 
+        varargout{n}.dist = gps.dist;
+    end
+end

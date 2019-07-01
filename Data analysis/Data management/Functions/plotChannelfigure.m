@@ -105,19 +105,21 @@ function [f,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_handles] = plotChannelfigure(Sector,S
 
     %% Callback functions
     function refresh(src,event)
+       fprintf('Updating figures...\n')
        % Read and display the input to the plots
        plot1y = ch_handles.typef1y.String{ch_handles.typef1y.Value};
        plot2y = ch_handles.typef2y.String{ch_handles.typef2y.Value};
        plot3y = ch_handles.typef3y.String{ch_handles.typef3y.Value};
        plot4y = ch_handles.typef4y.String{ch_handles.typef4y.Value};
-       plotDistance(plot1y,ch_sp1,1,ch_handles)
+       plotDistance_sector(plot1y,ch_sp1,1,ch_handles)
        title(ch_sp1,' ')
-       plotDistance(plot2y,ch_sp2,2,ch_handles)
+       plotDistance_sector(plot2y,ch_sp2,2,ch_handles)
        title(ch_sp2,' ')
-       plotDistance(plot3y,ch_sp3,3,ch_handles)
+       plotDistance_sector(plot3y,ch_sp3,3,ch_handles)
        title(ch_sp3,' ')
-       plotDistance(plot4y,ch_sp4,4,ch_handles)
+       plotDistance_sector(plot4y,ch_sp4,4,ch_handles)
        title(ch_sp4,' ')
+       fprintf('Finished updates\n')
     end
 
     function GraphChoice(src, event,sbpl)
@@ -142,14 +144,14 @@ function [f,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_handles] = plotChannelfigure(Sector,S
           % Update the figures with correct graph
           if strcmp(graph,'All')
              
-               plotDistance(ploty,sp,sbpl,ch_handles)
+               plotDistance_sector(ploty,sp,sbpl,ch_handles)
                title(sp,' ')
              
           else
                updateDistance(ploty,graph,sp)
                title(sp,' ')
           end
-          
+      
 end
  
     function  plot_sector(src,event)
