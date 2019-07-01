@@ -1,4 +1,4 @@
-function [f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr,Sector)
+function [f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr,Sector,var_list)
 
 %% Initialization
 %global Velocity Acc GPS LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC Xs Ys
@@ -26,8 +26,9 @@ handles.ylabelf1.Position = [5 280 100 20];
 
 handles.typef1y = uicontrol(panel,'style','popupmenu');
 handles.typef1y.Position = [105 280 100 20];
-handles.typef1y.String = {'gps','Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
-        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+%handles.typef1y.String = {'gps','Angle','GyroAccel','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+%        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+handles.typef1y.String = var_list;
 
 %% Handles Subfigure 2
 handles.textf2 = uicontrol(panel,'style','text');
@@ -50,8 +51,9 @@ handles.ylabelf2.Position = [5 220 100 20];
 
 handles.typef2y = uicontrol(panel,'style','popupmenu');
 handles.typef2y.Position = [105 220 100 20];
-handles.typef2y.String = {'gps','Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
-        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+% handles.typef2y.String = {'gps','Angle','GyroAccel','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+%         ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+handles.typef2y.String = var_list;
 
 %% Handles Subfigure 3
 handles.textf3 = uicontrol(panel,'style','text');
@@ -74,8 +76,9 @@ handles.ylabelf3.Position = [5 160 100 20];
 
 handles.typef3y = uicontrol(panel,'style','popupmenu');
 handles.typef3y.Position = [105 160 100 20];
-handles.typef3y.String = {'gps','Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
-        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+% handles.typef3y.String = {'gps','Angle','GyroAccel','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+%         ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+handles.typef3y.String = var_list;
 
 %% Refresh button
 handles.refresh = uicontrol(panel,'style','pushbutton');

@@ -1,4 +1,4 @@
-function [f,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_handles] = plotChannelfigure(Sector,S_nr)
+function [f,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_handles] = plotChannelfigure(Sector,S_nr,var_list)
     global distance
     %% Initialization
     %global Velocity Acc GPS LV BMS_V BMS_C BMS_T MC_m MC_PS MC_air MC Xs Ys
@@ -12,8 +12,10 @@ function [f,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_handles] = plotChannelfigure(Sector,S
 
     ch_handles.typef1y = uicontrol(panel,'style','popupmenu');
     ch_handles.typef1y.Position = [90 25 80 20];
-    ch_handles.typef1y.String = {'Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
-            ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+%     ch_handles.typef1y.String = {'Angle','GyroAccel','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+%             ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+    ch_handles.typef1y.String = var_list;
+        
 
     %% Handles Subfigure 2
     ch_handles.textf2 = uicontrol(panel,'style','text');
@@ -22,8 +24,9 @@ function [f,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_handles] = plotChannelfigure(Sector,S
 
     ch_handles.typef2y = uicontrol(panel,'style','popupmenu');
     ch_handles.typef2y.Position = [345 25 80 20];
-    ch_handles.typef2y.String = {'Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
-            ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+%     ch_handles.typef2y.String = {'Angle','GyroAccel','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+%             ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+    ch_handles.typef2y.String = var_list;
 
     %% Handles Subfigure 3
     ch_handles.textf3 = uicontrol(panel,'style','text');
@@ -32,8 +35,9 @@ function [f,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_handles] = plotChannelfigure(Sector,S
 
     ch_handles.typef3y = uicontrol(panel,'style','popupmenu');
     ch_handles.typef3y.Position = [600 25 80 20];
-    ch_handles.typef3y.String = {'Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
-            ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+%     ch_handles.typef3y.String = {'Angle','GyroAccel','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+%             ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+    ch_handles.typef3y.String = var_list;
 
     %% Handles Subfigure 4
     ch_handles.textf4 = uicontrol(panel,'style','text');
@@ -42,8 +46,9 @@ function [f,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_handles] = plotChannelfigure(Sector,S
 
     ch_handles.typef4y = uicontrol(panel,'style','popupmenu');
     ch_handles.typef4y.Position = [855 25 80 20];
-    ch_handles.typef4y.String = {'Acc','Gyro','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
-            ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+    %ch_handles.typef4y.String = {'Angle','GyroAccel','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
+    %        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+    ch_handles.typef4y.String = var_list;
 
     %% Refresh button
     ch_handles.refresh = uicontrol(panel,'style','pushbutton');

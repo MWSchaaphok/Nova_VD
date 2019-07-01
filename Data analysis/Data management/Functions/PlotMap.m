@@ -2,16 +2,21 @@ function [parsed_osm,Sector,S_nr] = PlotMap(track_name,gps,distance)
     osm_filename = strcat(track_name,'_map.osm');
     img_filename = strcat(track_name,'_map.png');
     
-    disp('Reading open street map information...');
-    [parsed_osm,~]= parse_openstreetmap(osm_filename);
-    disp('Finished reading');
-    fig = figure; 
-    ax = axes('Parent',fig);
-    bounds = parsed_osm.bounds;
-    show_map(ax,bounds,img_filename);
-    plot(ax,gps.longitude, gps.latitude,'r','LineWidth',2);
-    title('GPS data')
-    hold on; 
+    try 
+        disp('Reading open street map information...');
+        [parsed_osm,~]= parse_openstreetmap(osm_filename);
+        disp('Finished reading');
+        fig = figure; 
+        ax = axes('Parent',fig);
+        bounds = parsed_osm.bounds;
+        show_map(ax,bounds,img_filename);
+        plot(ax,gps.longitude, gps.latitude,'r','LineWidth',2);
+        title('GPS data')
+        hold on; 
+    catch 
+        fprintf('No map information available, looking for sector information')
+    end 
+    
     try
         [Sector,S_nr] = Sectors(gps,track_name,distance);
         for i = 1:S_nr

@@ -1,5 +1,5 @@
 function [] = plotDistance(ploty,sp,sp_nr,Sector,Sect_plot)
-    global Velocity Acc gps BMS_V BMS_C BMS_T MC_m MC_PS distance Gyro
+    global Velocity Angle gps BMS_V BMS_C BMS_T MC_m MC_PS distance GyroAccel
     global MC_Current MC_Speed MC_Voltage MC_Flux MC_Fault MC_Torque 
     global handles 
     % Clear current axis

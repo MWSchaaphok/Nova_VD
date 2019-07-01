@@ -1,0 +1,13 @@
+Name team member: Marianne.
+Test date: 1-7-2019.
+File name test data: C:\Users\Marianne\Documents\GitHub\Nova_VD\Data analysis\Data management\Data\Thies_test2.csv.
+Type of test: Other.
+Track: -.
+Number of laps: NaN.
+Weather type: Sunny.
+Temperature:  NaN.
+Track conditions: Dry.
+Tire Compound: Soft.
+Tire Pressure:  NaN.
+Gear ratio: 0.52632.
+Notes: NCeawl cDuAlQa tsiyosntse ma cacnodr dcionngv etrot ihntgt ptse:s/t/,w wwwi.tihn snterwu catnagbllee sc.aclocmu/liadt/iAonngsl eb-ym egaysruorsecmoepnet -aunsdi nagc-cgeylreor-oamcecteelre.r o m e t e r - a n d - A r /.
