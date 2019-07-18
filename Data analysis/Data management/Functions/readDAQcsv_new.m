@@ -17,23 +17,25 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
     t1                                 = A(:, 1);
     latitude                           = A(:, 2);
     longitude                          = A(:, 3);
+    speed                              = A(:, 4);
     idx                                = ~isnan(t1);
 
     gps.t                              = t1(idx);
     gps.latitude                       = latitude(idx);
     gps.longitude                      = longitude(idx);
+    gps.speed                          = speed(idx); 
 
     % Gyroscope and Accelerometer data
-    t2                                 = A(:, 4);
-    GyroAccel_IAx                      = A(:, 5);
-    GyroAccel_IAy                      = A(:, 6);
-    GyroAccel_IAz                      = A(:, 7);
-    GyroAccel_Ax                       = A(:, 8);
-    GyroAccel_Ay                       = A(:, 9);
-    GyroAccel_Az                       = A(:, 10);
-    GyroAccel_Gx                       = A(:, 11);
-    GyroAccel_Gy                       = A(:, 12);
-    GyroAccel_Gz                       = A(:, 13);
+    t2                                 = A(:, 5);
+    GyroAccel_IAx                      = A(:, 6);
+    GyroAccel_IAy                      = A(:, 7);
+    GyroAccel_IAz                      = A(:, 8);
+    GyroAccel_Ax                       = A(:, 9);
+    GyroAccel_Ay                       = A(:, 10);
+    GyroAccel_Az                       = A(:, 11);
+    GyroAccel_Gx                       = A(:, 12);
+    GyroAccel_Gy                       = A(:, 13);
+    GyroAccel_Gz                       = A(:, 14);
 
 
     idx                                = ~isnan(t2);
@@ -49,11 +51,11 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
     GyroAccel.Gz                       = GyroAccel_Gz(idx);
 
     % BMS voltage
-    t4                                 = A(:, 14);
-    BMS_volt_min                       = A(:, 15);
-    BMS_volt_max                       = A(:, 16);
-    BMS_volt_avg                       = A(:, 17);
-    BMS_volt_tot                       = A(:, 18);
+    t4                                 = A(:, 15);
+    BMS_volt_min                       = A(:, 16);
+    BMS_volt_max                       = A(:, 17);
+    BMS_volt_avg                       = A(:, 18);
+    BMS_volt_tot                       = A(:, 19);
     idx                                = ~isnan(t4);
 
     BMS_V.t                            = t4(idx);
@@ -63,9 +65,9 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
     BMS_V.volt_tot                     = BMS_volt_tot(idx);
 
     % BMS current and charge
-    t5                                 = A(:, 19);
-    BMS_current                        = A(:, 20);
-    BMS_charge                         = A(:, 21);
+    t5                                 = A(:, 20);
+    BMS_current                        = A(:, 21);
+    BMS_charge                         = A(:, 22);
     idx                                = ~isnan(t5);
     BMS_C.t                            = t5(idx);
     BMS_C.current                      = BMS_current(idx);
@@ -73,10 +75,10 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
 
 
     % BMS temperatures
-    t6                                 = A(:, 22);
-    BMS_temp_min                       = A(:, 23);
-    BMS_temp_max                       = A(:, 24);
-    BMS_temp_avg                       = A(:, 25);
+    t6                                 = A(:, 23);
+    BMS_temp_min                       = A(:, 24);
+    BMS_temp_max                       = A(:, 25);
+    BMS_temp_avg                       = A(:, 26);
     idx                                = ~isnan(t6);
 
     BMS_T.t                            = t6(idx);
@@ -85,18 +87,18 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
     BMS_T.temp_avg                     = BMS_temp_avg(idx);
 
     % MC motor temp
-    t7                                 = A(:, 26);
-    MC_motor_temp                      = A(:, 27);
+    t7                                 = A(:, 27);
+    MC_motor_temp                      = A(:, 28);
     idx                                = ~isnan(t7);
 
     MC_m.t                             = t7(idx);
     MC_m.temp                          = MC_motor_temp(idx);
 
     % MC power stage temp
-    t8                                 = A(:, 28);
-    MC_ps_temp1                        = A(:, 29);
-    MC_ps_temp2                        = A(:, 30);
-    MC_ps_temp3                        = A(:, 31);
+    t8                                 = A(:, 29);
+    MC_ps_temp1                        = A(:, 30);
+    MC_ps_temp2                        = A(:, 31);
+    MC_ps_temp3                        = A(:, 32);
     idx                                = ~isnan(t8);
 
     MC_PS.t                            = t8(idx);
@@ -105,19 +107,19 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
     MC_PS.temp3                        = MC_ps_temp3(idx);
 
     % MC speed
-    t9                                 = A(:, 32);
-    MC_speed                           = A(:, 33);
+    t9                                 = A(:, 33);
+    MC_speed                           = A(:, 34);
     idx                                = ~isnan(t9);
 
     MC_Speed.t                         = t9(idx);
     MC_Speed.speed                     = MC_speed(idx);
 
     % MC current
-    t10                                = A(:, 34);
-    MC_current_pA                      = A(:, 35);
-    MC_current_pB                      = A(:, 36);
-    MC_current_pC                      = A(:, 37);
-    MC_current_DC                      = A(:, 38);
+    t10                                = A(:, 35);
+    MC_current_pA                      = A(:, 36);
+    MC_current_pB                      = A(:, 37);
+    MC_current_pC                      = A(:, 38);
+    MC_current_DC                      = A(:, 39);
     idx                                = ~isnan(t10);
 
     MC_Current.t                       = t10(idx);
@@ -127,11 +129,11 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
     MC_Current.DC                      = MC_current_DC(idx);
 
     % MC voltage
-    t11                                = A(:, 39);
-    MC_voltage_DC                      = A(:, 40);
-    MC_voltage_output                  = A(:, 41);
-    MC_voltage_VAB                     = A(:, 42);
-    MC_voltage_VBC                     = A(:, 43);
+    t11                                = A(:, 40);
+    MC_voltage_DC                      = A(:, 41);
+    MC_voltage_output                  = A(:, 42);
+    MC_voltage_VAB                     = A(:, 43);
+    MC_voltage_VBC                     = A(:, 44);
     idx                                = ~isnan(t11);
 
     MC_Voltage.t                       = t11(idx);
@@ -141,11 +143,11 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
     MC_Voltage.VBC                     = MC_voltage_VBC(idx);
 
     % MC flux
-    t12                                = A(:, 44);
-    MC_flux_com                        = A(:, 45);
-    MC_flux_fb                         = A(:, 46);
-    MC_Id                              = A(:, 47);
-    MC_Iq                              = A(:, 48);
+    t12                                = A(:, 45);
+    MC_flux_com                        = A(:, 46);
+    MC_flux_fb                         = A(:, 47);
+    MC_Id                              = A(:, 48);
+    MC_Iq                              = A(:, 49);
     idx                                = ~isnan(t12);
 
     MC_Flux.t                          = t12(idx);
@@ -155,11 +157,11 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
     MC_Flux.Iq                         = MC_Iq(idx);
 
     % MC faults
-    t13                                = A(:, 49);
-    MC_fault_post_lo                   = A(:, 50);
-    MC_fault_post_hi                   = A(:, 51);
-    MC_fault_run_lo                    = A(:, 52);
-    MC_fault_run_hi                    = A(:, 53);
+    t13                                = A(:, 50);
+    MC_fault_post_lo                   = A(:, 51);
+    MC_fault_post_hi                   = A(:, 52);
+    MC_fault_run_lo                    = A(:, 53);
+    MC_fault_run_hi                    = A(:, 54);
     idx                                = ~isnan(t13);
 
     MC_Fault.t                         = t13(idx);
@@ -169,9 +171,9 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
     MC_Fault.run_hi                    = MC_fault_run_hi(idx);
 
     % MC torque
-    t14                                = A(:, 54);
-    MC_torque_com                      = A(:, 55);
-    MC_torque_fb                       = A(:, 56);
+    t14                                = A(:, 55);
+    MC_torque_com                      = A(:, 56);
+    MC_torque_fb                       = A(:, 57);
     idx                                = ~isnan(t14);
 
     MC_Torque.t                        = t14(idx);

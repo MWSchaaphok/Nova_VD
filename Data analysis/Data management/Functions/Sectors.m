@@ -10,7 +10,12 @@ function [Sector,S_nr] = Sectors(gps,track_name,distance)
         Sector.(name).coord = reshape(Coords,[2,(length(Coords)/2)])';
         Sector.(name).ind   = inpolygon(gps.latitude,gps.longitude,Sector.(name).coord(:,1),Sector.(name).coord(:,2));
         ind                 = find(Sector.(name).ind == 1);
-        Sector.(name).dist  = distance(ind(end)) - distance(ind(1));
+        temp                = ind(diff(ind)>1);
+        if ~isempty(temp)
+            Sector.(name).dist  = distance(temp(1)) - distance(ind(1));
+        else 
+            Sector.(name).dist  = distance(ind(end)) - distance(ind(1));
+        end
         plot(Sector.(name).coord(:,1),Sector.(name).coord(:,2));
         plot(gps.longitude(Sector.(name).ind),gps.latitude(Sector.(name).ind),'ko','Color',[rand rand rand]) % points inside
     end

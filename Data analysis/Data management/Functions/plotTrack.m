@@ -1,7 +1,6 @@
-function [] = plotTrack(ploty,sp,sp_nr)
+function [] = plotTrack(ploty,sp,sp_nr,hndles,lap,lap_nr)
     global Velocity Angle gps BMS_V BMS_C BMS_T MC_m MC_PS Xs Ys GyroAccel
     global MC_Current MC_Speed MC_Voltage MC_Flux MC_Fault MC_Torque 
-    global handles 
     % clear current axist
     cla(sp)
 
@@ -19,6 +18,15 @@ function [] = plotTrack(ploty,sp,sp_nr)
     else
         var = eval(ploty);
         FN = fieldnames(var);
+        lap_start = lap.ind(lap_nr);
+        try 
+            lap_end = lap.ind(lap_nr+1)-1;
+        catch 
+            lap_end = length(var.dist);
+        end
+        z = zeros(size(Xs));
+        var.(FN{2}) = var.(FN{2})(lap_start:lap_end);
+        var.t = var.t(lap_start:lap_end);
         z = zeros(size(Xs));
         col = interp1(var.t,var.(FN{2}),gps.t,'spline','extrap');  % This is the color, vary with x in this case.
         %col = var.dist;
@@ -44,20 +52,26 @@ function [] = plotTrack(ploty,sp,sp_nr)
             for i = 2:num
                 NewStr{i} = FN{i};
             end
-            handles.graphf1.String = NewStr;
+            hndles.graphf1.String = NewStr;
         elseif sp_nr == 2
             NewStr{1} = 'All';
             for i = 2:num
                 NewStr{i} = FN{i};
             end
-            handles.graphf2.String = NewStr;            
+            hndles.graphf2.String = NewStr;            
         elseif sp_nr == 3
             NewStr{1} = 'All';
             for i = 2:num
                 NewStr{i} = FN{i};
             end
-            handles.graphf3.String = NewStr;            
-        end 
+            hndles.graphf3.String = NewStr;            
+        elseif sp_nr == 4
+            NewStr{1} = 'All';
+            for i = 2:num
+                NewStr{i} = FN{i};
+            end
+            hndles.graphf4.String = NewStr;
+        end
     end
         
         

@@ -1,4 +1,4 @@
-function [] = plotDistance_sector(ploty,sp,sp_nr,hndles,lap,lap_nr,Sector,Sect_plot)
+function [] = plotTime_sector(ploty,sp,sp_nr,hndles,lap,lap_nr,Sector,Sect_plot)
     global Velocity Angle gps BMS_V BMS_C BMS_T MC_m MC_PS distance GyroAccel
     global MC_Current MC_Speed MC_Voltage MC_Flux MC_Fault MC_Torque 
     global handles 
@@ -18,13 +18,13 @@ function [] = plotDistance_sector(ploty,sp,sp_nr,hndles,lap,lap_nr,Sector,Sect_p
             FN = fieldnames(var);
             num = numel(FN);
             for i = 2:num-1
-                plot(sp, var.dist(lap_start:lap_end), var.(FN{i})(lap_start:lap_end))
+                plot(sp, var.t(lap_start:lap_end), var.(FN{i})(lap_start:lap_end))
                 hold(sp, 'on'); 
                 leg{i-1} = strrep(FN{i},'_',' ');
             end 
             ttl = strrep(ploty,'_',' ');
-            title(sp,[ttl,' over the distance'])
-            xlabel(sp,'Distance [m]');
+            title(sp,[ttl,' over time'])
+            xlabel(sp,'Time [s]');
             ylabel(sp,ttl)
             legend(sp,leg{:})
             hold(sp, 'off')
@@ -41,19 +41,19 @@ function [] = plotDistance_sector(ploty,sp,sp_nr,hndles,lap,lap_nr,Sector,Sect_p
             FN = fieldnames(var);
             num = numel(FN);
             col = [' ','b','r','g','k','y'];
-            var.dist = var.dist(lap_start:lap_end);
+            var.t = var.t(lap_start:lap_end);
             for i = 2:num-1
                 var.(FN{i}) = var.(FN{i})(lap_start:lap_end);
                 for j= Sect_plot
                     name = strcat('S',num2str(j));
-                    plot(sp, var.dist(Sector.(name).ind(lap_start:lap_end)), var.(FN{i})(Sector.(name).ind(lap_start:lap_end)), col(i))
+                    plot(sp, var.t(Sector.(name).ind(lap_start:lap_end)), var.(FN{i})(Sector.(name).ind(lap_start:lap_end)), col(i))
                     hold(sp, 'on'); 
                 end
                 leg{i-1} = strrep(FN{i},'_',' ');
             end 
             ttl = strrep(ploty,'_',' ');
-            title(sp,[ttl,' over the distance'])
-            xlabel(sp,'Distance [m]');
+            title(sp,[ttl,' over time'])
+            xlabel(sp,'Time [s]');
             ylabel(sp,ttl)
             legend(sp,leg{:})
             hold(sp, 'off')

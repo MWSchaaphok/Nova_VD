@@ -242,7 +242,7 @@ Map = 'Do you want to plot the gps data on the map? [yes,no,y,n]';
 map = input(Map);
 
 % For sector definitions
-Trackname = 'Select one of the following tracks in order to plot sectors [Assen,Campus, ]';
+Trackname = 'Select one of the following tracks in order to compute sectors [Assen,Campus, ]';
 track_name = input(Trackname);
 
 if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
@@ -260,13 +260,16 @@ end
 %% Separate laps
 if S_nr == 0 
     fprintf('No sectors available to seperate laps\n')
+    lap.ind = [];
 else 
     fprintf('Assuming first sector starts at the start/finish line\n')
     S1_inds = find(Sector.S1.ind == 1);
     next_lap = [0,;find(diff(S1_inds)>1)];
+    lap.ind = [1];
     for i=2:size(next_lap)
         name = strcat('L',num2str(i-1));
         lap.(name) = Sector.S1.ind(S1_inds(next_lap(i-1)+1):S1_inds(next_lap(i)+1)-1);
+        lap.ind = [lap.ind, S1_inds(next_lap(i)+1)];        
     end
     name = strcat('L',num2str(i));
     lap.(name) = Sector.S1.ind(S1_inds(next_lap(i)+1):end);
@@ -275,10 +278,10 @@ end
 
 %% Make GUIs
 % Plot 3 subplot GUI for time/distance/track plotting
-[f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr,Sector,var_list);
+[f,sp1,sp2,sp3,handles] = plotUIfigure(S_nr,Sector,var_list,lap);
 
 % Plot 4 subplot distance channel GUI
-[f_ch,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_hndls] = plotChannelfigure(Sector, S_nr,var_list);
+[f_ch,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_hndls] = plotChannelfigure(Sector, S_nr,var_list,lap);
 
 % Default plots - velocity along track + max speed reached
 %               - acceleration over distance
@@ -323,6 +326,10 @@ function [varargout] = interpolate2gps(gps,varargin)
                 varargout{n}.(FN{j}) = [];
             end
         end 
-        varargout{n}.dist = gps.dist;
+        if isempty(varargout{n}.(FN{2}))
+            varargout{n}.dist = [];
+        else 
+            varargout{n}.dist = gps.dist;
+        end
     end
 end
