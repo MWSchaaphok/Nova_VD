@@ -247,6 +247,7 @@ track_name = input(Trackname);
 
 if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
     [~,Sector,S_nr]= PlotMap(track_name,gps,distance);
+
 else
     try 
         [Sector,S_nr] = Sectors(gps,track_name,distance);
@@ -256,6 +257,7 @@ else
         S_nr = 0;
     end
 end 
+
 
 %% Separate laps
 if S_nr == 0 
@@ -275,6 +277,11 @@ else
     lap.(name) = Sector.S1.ind(S1_inds(next_lap(i)+1):end);
     fprintf('Laps seperated\n')
 end
+
+% Make sector report, saved as an excel file in the same folder as the
+% original dataset
+[T,T2,T3] = SectorReport(gps,Velocity,lap,Sector,file,path);
+fprintf('Sector report made and saved in the folder of the original dataset\n')
 
 %% Make GUIs
 % Plot 3 subplot GUI for time/distance/track plotting
