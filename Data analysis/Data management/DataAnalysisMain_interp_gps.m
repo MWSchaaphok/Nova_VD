@@ -13,10 +13,10 @@ addpath('Spherical2AzimuthalEquidistant');
 addpath(genpath('Functions'))
 addpath('Data')
 global Velocity Angle gps BMS_V BMS_C BMS_T MC_m MC_PS MC Xs Ys GyroAccel distance 
-global MC_Current MC_Speed MC_Voltage MC_Flux MC_Fault MC_Torque 
+global MC_Current MC_Speed MC_Voltage MC_Flux MC_Fault MC_Torque Throttle
 global handles parsed_osm img_filename
 
-%% Create data information sheet or load data
+%% Create data information sheet and load data
 % Check if a data information sheet already exists.
 Datasheet = 'Does this dataset already have a corresponding information sheet (.txt)? [yes,no,y,n]';
 datasheet = input(Datasheet);
@@ -39,23 +39,23 @@ if strcmp(datasheet,'no') || strcmp(datasheet,'n')|| strcmp(datasheet,'No')
     %dataset = load(data.DAQfile);
     if strcmp(data.DAQfile(end-3:end),'.csv')
         fprintf('Reading CSV file...\n');
-        try
+        %try
             [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] =readDAQcsv_new(data.DAQfile);
-        catch
-            [gps,LV,BMS_V,BMS_C,BMS_T,Acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv_old(data.DAQfile);
-            MC_Speed.t = [];
-            MC_Speed.speed = [];
-            MC_Current.t = [];
-            MC_Current.c = [];
-            MC_Voltage.volt = [];
-            MC_Flux.t = [];
-            MC_Flux.flux = [];
-            MC_Fault.t = [];
-            MC_Fault.F = [];
-            MC_Torque.t = [];
-            MC_Torque.T = [];
-        end
-            fprintf('Finished reading\n');
+        %catch
+        %    [gps,LV,BMS_V,BMS_C,BMS_T,Acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv_old(data.DAQfile);
+        %    MC_Speed.t = [];
+        %    MC_Speed.speed = [];
+        %    MC_Current.t = [];
+        %    MC_Current.c = [];
+        %    MC_Voltage.volt = [];
+        %    MC_Flux.t = [];
+        %    MC_Flux.flux = [];
+        %    MC_Fault.t = [];
+        %    MC_Fault.F = [];
+        %    MC_Torque.t = [];
+        %    MC_Torque.T = [];
+        %end
+       %     fprintf('Finished reading\n');
     else
         fprintf('Loading matlab file...\n')
         load(data.DAQfile)
@@ -75,34 +75,34 @@ else
     end
     if strcmp(file(end-3:end),'.csv')
         fprintf('Reading CSV file...\n');        
-        try
-            [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] =readDAQcsv_new(fullfile(path,file));
-        catch
-            [gps,LV,BMS_V,BMS_C,BMS_T,Acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv_old(fullfile(path,file));
-            Angle.t = [];
-            Angle = [];
-            GyroAccel.t = [];
-            GyroAccel.IAx = [];
-            GyroAccel.IAy = [];
-            GyroAccel.IAz = [];
-            GyroAccel.Gx = [];
-            GyroAccel.Gy = [];
-            GyroAccel.Gz = [];
-            MC_Speed.t = [];
-            MC_Speed.speed = [];
-            MC_Current.t = [];
-            MC_Current.c = [];
-            MC_Voltage.t = [];
-            MC_Voltage.volt = [];
-            MC_Flux.t = [];
-            MC_Flux.flux = [];
-            MC_Fault.t = [];
-            MC_Fault.F = [];
-            MC_Torque.t = [];
-            MC_Torque.T = [];
-        end
+        %try
+        [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] =readDAQcsv_new(fullfile(path,file));
+        %catch
+        %    [gps,LV,BMS_V,BMS_C,BMS_T,Acc,MC_m,MC_PS,MC_air,MC,Gyro] = readDAQcsv_old(fullfile(path,file));
+        %    Angle.t = [];
+        %    Angle = [];
+        %    GyroAccel.t = [];
+        %    GyroAccel.IAx = [];
+        %    GyroAccel.IAy = [];
+        %    GyroAccel.IAz = [];
+        %    GyroAccel.Gx = [];
+        %    GyroAccel.Gy = [];
+        %    GyroAccel.Gz = [];
+        %    MC_Speed.t = [];
+        %    MC_Speed.speed = [];
+        %    MC_Current.t = [];
+        %    MC_Current.c = [];
+        %    MC_Voltage.t = [];
+        %    MC_Voltage.volt = [];
+        %    MC_Flux.t = [];
+        %    MC_Flux.flux = [];
+        %    MC_Fault.t = [];
+        %    MC_Fault.F = [];
+        %    MC_Torque.t = [];
+        %    MC_Torque.T = [];
+        %end
         %[gps,Acc,Gyro,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] = readDAQcsv(fullfile(path,file));
-        fprintf('Finished reading\n');
+        %fprintf('Finished reading\n');
     else
         fprintf('Loading matlab file...\n')
         load(fullfile(path,file))
@@ -111,9 +111,61 @@ else
     %save([file(1:end-3),'.mat'],'gps','Acc','Gyro','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
     %    ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque');
 end
+
+%% Load a second file for comparison if desired
+SecondSet = 'Do you want to load a 2nd set for comparison? [yes,no,y,n]';
+Set2 = input(SecondSet);
+if strcmp(Set2,'yes') || strcmp(Set2,'Yes') || strcmp(Set2,'y')
+    fprintf('Load a second file (*.csv,*.mat,*.m)\n')
+    [file,path] = uigetfile({'*.csv'});
+    if isequal(file,0)
+        fprintf('User selected Cancel\n');
+        return
+    else
+        fprintf('User selected a file \n');
+        %dataset = load(fullfile(path,file));
+    end
+    if strcmp(file(end-3:end),'.csv')
+        fprintf('Reading CSV file...\n');        
+        try
+            [gps2,Angle2,GyroAccel2,BMS_V2,BMS_C2,BMS_T2,MC_m2,MC_PS2,MC_Current2,MC_Speed2,MC_Voltage2, MC_Flux2, MC_Fault2, MC_Torque2] =readDAQcsv_new(fullfile(path,file));
+        catch
+            [gps2,LV2,BMS_V2,BMS_C2,BMS_T2,Acc2,MC_m2,MC_PS2,MC_air2,MC2,Gyro2] = readDAQcsv_old(fullfile(path,file));
+            Angle2.t = [];
+            Angle2 = [];
+            GyroAccel2.t = [];
+            GyroAccel2.IAx = [];
+            GyroAccel2.IAy = [];
+            GyroAccel2.IAz = [];
+            GyroAccel2.Gx = [];
+            GyroAccel2.Gy = [];
+            GyroAccel2.Gz = [];
+            MC_Speed2.t = [];
+            MC_Speed2.speed = [];
+            MC_Current2.t = [];
+            MC_Current2.c = [];
+            MC_Voltage2.t = [];
+            MC_Voltage2.volt = [];
+            MC_Flux2.t = [];
+            MC_Flux2.flux = [];
+            MC_Fault2.t = [];
+            MC_Fault2.F = [];
+            MC_Torque2.t = [];
+            MC_Torque2.T = [];
+        end
+        %[gps,Acc,Gyro,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] = readDAQcsv(fullfile(path,file));
+        fprintf('Finished reading\n');
+    else
+        fprintf('Loading matlab file...\n')
+        load(fullfile(path,file))
+        fprintf('Finished reading\n');
+    end
+end
+
 % List of available variables for the dropdown menus in the GUI
 var_list = {'gps','Angle','GyroAccel','Velocity','BMS_V','BMS_C','BMS_T','MC_m','MC_PS'...
-        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque'};
+        ,'MC_Current','MC_Speed','MC_Voltage','MC_Flux', 'MC_Fault', 'MC_Torque','Throttle'};
+    
 %% Computations on GPS 
 
 % Transform lon-lat gps coordinates to x,y coordinates and to curv,distance
@@ -206,35 +258,70 @@ end
 % E2    = cumtrapz(distance, -sin(psi2));
 % plot(E2,N2)
 
+%% Filter data
+%[varargout] = SmoothVars(method,varargin)
+
 %% Computations velocity/angles
 % Compute velocity from GPS data and from Accelerations 
-Velocity.t = gps.t;
-Velocity.x_gps = [0;diff(distance)'./diff(gps.t)]*3.6;
+Velocity.t = gps.t; 
+Velocity.x_gps = movmean([0;diff(distance)'./diff(gps.t)]*3.6,40);
+Acc.x_gps = movmean([0; diff(Velocity.x_gps)./diff(gps.t)],10);
+try 
+    Velocity.gps = gps.speed; 
+    Acc.gps = [0;diff(Velocity.gps)./diff(gps.t)]./9.81;
+catch 
+    fprintf('No gps speed available\n')
+end 
 %Velocity.x_acc = cumtrapz(GyroAccel.t,GyroAccel.IAx*9.81);
 %Velocity.x_acc = interp1(GyroAccel.t,Velocity.x_acc,gps.t,'spline','extrap');
 
 % Use complementary filter to combine information for the angles:
 % filtered_angle = HPF*( filtered_angle + w* dt) + LPF*(angle_accel); where HPF + LPF = 1
+% Angle_accel = arctg( Ay / sqrt( Ax^2 + Az^2 ) )]
 % We use HPF = 0.98, LPF = 0.02
 % https://www.instructables.com/id/Angle-measurement-using-gyro-accelerometer-and-Ar/
 HPF = 0.98; 
 LPF = 0.02; 
-
-roll = zeros(size(GyroAccel.t));
-pitch = zeros(size(GyroAccel.t));
-yaw = zeros(size(GyroAccel.t));
-for i = 2:length(GyroAccel.t)
-    roll(i) = HPF*(roll(i-1) + (GyroAccel.t(i)-GyroAccel.t(i-1))*GyroAccel.Gx(i)) + LPF*Angle.AccelIX(i);
-    yaw(i) = HPF*(yaw(i-1) + (GyroAccel.t(i)-GyroAccel.t(i-1))*GyroAccel.Gz(i)) + LPF*Angle.AccelIZ(i);
-    pitch(i) = HPF*(pitch(i-1) + (GyroAccel.t(i)-GyroAccel.t(i-1))*GyroAccel.Gy(i)) + LPF*Angle.AccelIY(i);
+angle_accel = atan(GyroAccel.IAy(6:end)./(sqrt(GyroAccel.IAx(6:end).^2 + GyroAccel.IAz(6:end).^2)))/(2*pi)*180;
+roll = zeros(length(GyroAccel.t)-5,1);
+Gyro_roll = zeros(length(GyroAccel.t)-5,1);
+%pitch = zeros(size(GyroAccel.t));
+%yaw = zeros(size(GyroAccel.t));
+for i = 2:length(GyroAccel.t)-5
+    roll(i) = HPF*(roll(i-1) + (GyroAccel.t(i+5)-GyroAccel.t(i+4))*GyroAccel.Gy(i+5)) + LPF*angle_accel(i);
+    Gyro_roll(i) = Gyro_roll(i-1)+(GyroAccel.t(i+5)-GyroAccel.t(i+4))*GyroAccel.Gy(i+5);
+    %roll(i) = HPF*(roll(i-1) + (GyroAccel.t(i)-GyroAccel.t(i-1))*GyroAccel.Gx(i)) + LPF*Angle.AccelIY(i);
+    %yaw(i) = HPF*(yaw(i-1) + (GyroAccel.t(i)-GyroAccel.t(i-1))*GyroAccel.Gz(i)) + LPF*Angle.AccelIZ(i);
+    %pitch(i) = HPF*(pitch(i-1) + (GyroAccel.t(i)-GyroAccel.t(i-1))*GyroAccel.Gy(i)) + LPF*Angle.AccelIY(i);
     
 end
 Angle.roll = roll;
-Angle.pitch = pitch; 
-Angle.yaw = yaw;
+Angle.yaw  = []; 
+%Angle.pitch = pitch; 
+%Angle.yaw = yaw;
+
+MC_Speed.rpm  = MC_Speed.speed; 
+% Conversion from rpm to km/h, different tyre circumference not yet
+% included in the corners
+MC_Speed.speed = MC_Speed.rpm*1/1.71*0.32*2*pi*60/1000;
 %% Interpolate everything with respect to the time scale of the gps
-gps.dist = distance;
-[Angle,Velocity,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] = interpolate2gps(gps,Angle,Velocity,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque);
+if ~isempty(gps.t)
+    gps.dist = distance;
+    [Angle,Velocity,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque] = interpolate2gps(gps,Angle,Velocity,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,MC_Voltage, MC_Flux, MC_Fault, MC_Torque);
+else
+    fprintf('No gps data available for interpolation')
+end
+%% Compute accelerations in g from gps data
+Acc.g = max(Acc.x_gps, 0); 
+Acc.braking = min(Acc.x_gps, 0); 
+
+try 
+    Throttle.input = MC_Torque.com/5.00*100;
+    Throttle.t = MC_Torque.t; 
+    Throttle.dist = MC_Torque.dist;
+catch 
+    fprintf('No throttle information available\n')
+end 
 
 %% Make sectors + Plot on Map
 % Plot the GPS data 
@@ -242,7 +329,7 @@ Map = 'Do you want to plot the gps data on the map? [yes,no,y,n]';
 map = input(Map);
 
 % For sector definitions
-Trackname = 'Select one of the following tracks in order to compute sectors [Assen,Campus, ]';
+Trackname = 'Select one of the following tracks in order to compute sectors [Assen,Breda,Campus, ]';
 track_name = input(Trackname);
 
 if strcmp(map,'yes') || strcmp(map,'y')|| strcmp(map,'Yes')
@@ -257,7 +344,6 @@ else
         S_nr = 0;
     end
 end 
-
 
 %% Separate laps
 if S_nr == 0 
@@ -280,8 +366,12 @@ end
 
 % Make sector report, saved as an excel file in the same folder as the
 % original dataset
-[T,T2,T3] = SectorReport(gps,Velocity,lap,Sector,file,path);
-fprintf('Sector report made and saved in the folder of the original dataset\n')
+if ~isempty(Sector)
+    [T,T2,T3] = SectorReport(gps,Velocity,lap,Sector,file,path);
+    fprintf('Sector report made and saved in the folder of the original dataset\n')
+else
+    fprintf('No Sectors available for sector report\n')
+end 
 
 %% Make GUIs
 % Plot 3 subplot GUI for time/distance/track plotting
@@ -290,10 +380,25 @@ fprintf('Sector report made and saved in the folder of the original dataset\n')
 % Plot 4 subplot distance channel GUI
 [f_ch,ch_sp1,ch_sp2,ch_sp3,ch_sp4,ch_hndls] = plotChannelfigure(Sector, S_nr,var_list,lap);
 
-% Default plots - velocity along track + max speed reached
-%               - acceleration over distance
-%               - BMS-voltage over distance
+%% Default plots - velocity along track + max speed reached
+% Can be done if wished. 
+try
+    fprintf(['Maximum speed reached is ',num2str(max(Velocity.x_gps)),'km/h\n']);
+    fprintf(['Maximum longitudinal acceleration is ', num2str(max(Acc.x_gps)),'m/s^2\n']); 
+catch
+    fprintf('Max longitudinal acceleration not available\n');
+end
 
+figure; 
+h = histogram(MC_Speed.rpm);
+title('RPM')
+ylabel('Time')
+xlabel('RPM')
+ 
+if ~isempty(Throttle)
+    CreateOverlay(MC_Speed.t,MC_Speed.rpm,Throttle.t,Throttle.input,'Distance',' ');
+end
+% Default plots for both the GUI's 
 % plotTrack('GPS',sp1,1);
 % handles.typef1x.Value = 1;
 % handles.typef1y.Value = 1;
@@ -305,6 +410,17 @@ fprintf('Sector report made and saved in the folder of the original dataset\n')
 % plotTime('GyroAccel',sp3,3)
 % handles.typef3x.Value = 3; 
 % handles.typef3y.Value = 2;
+
+%% Construct the GG diagrams 
+% Needs both correct lateral and longitudinal acceleration in g
+% approximates the gripcircle, for racing should at least be heartshaped
+% with few points in the middle.
+
+% figure; 
+% plot(gps.A_lat, gps.A_lon); 
+% title('GG diagram')
+% xlabel('Lateral acceleration [g]');
+% ylabel('Longitudinal acceleration [g]');
 
 %% Functions 
 function [collinear] = pointsAreCollinear(xy)
@@ -324,7 +440,7 @@ function [varargout] = interpolate2gps(gps,varargin)
     end
     for n = 1:nin-1
         FN = fieldnames(varargin{n});
-        num = numel(FN);
+        num = max(2,numel(FN));
         varargout{n}.t = gps.t;
         for j = 2:num
             try

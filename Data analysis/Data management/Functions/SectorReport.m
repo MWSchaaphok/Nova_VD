@@ -65,14 +65,16 @@ function [T,T2,T3] = SectorReport(gps,Velocity,lap,Sector,file,path)
     filename = strcat(path,'Sector_report_',file,'.xlsx');
     %setHeading(T,'Sector times');
     xlswrite(filename,{'Lap times and Sector times'})
-    writetable(T,filename,'Sheet',1,'Range','A2');
+    writetable(T,filename,'Sheet','Lap','Range','A2');
     start_point = strcat('A',num2str(size(T,1)+4));
     xlswrite(filename,{'Entry and Exit speeds sectors'},1,start_point)
     start_point = strcat('A',num2str(size(T,1)+5));
-    writetable(T2,filename,'Sheet',1,'Range',start_point);
+    writetable(T2,filename,'Sheet','Lap','Range',start_point);
     start_point2 = strcat('A',num2str(size(T,1) + size(T2,1) + 7));
     xlswrite(filename,{'Min and Max speeds sectors'},1,start_point2);
     start_point2 = strcat('A',num2str(size(T,1) + size(T2,1) + 8));
-    writetable(T3,filename,'Sheet',1,'Range',start_point2);
+    writetable(T3,filename,'Sheet','Lap','Range',start_point2);
+    
+%% Write images to 
 end
 

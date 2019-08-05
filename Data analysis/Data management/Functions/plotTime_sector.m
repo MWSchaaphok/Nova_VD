@@ -9,11 +9,16 @@ function [] = plotTime_sector(ploty,sp,sp_nr,hndles,lap,lap_nr,Sector,Sect_plot)
             cla(sp)
             % Plot all graphs from category
             var = eval(ploty);
-            lap_start = lap.ind(lap_nr);
-            try 
-                lap_end = lap.ind(lap_nr+1)-1;
-            catch 
-                lap_end = length(var.dist);
+            if isempty(lap.ind)
+                lap_start = 1;
+                lap_end = length(var.t);
+            else
+                lap_start = lap.ind(lap_nr);
+                try 
+                    lap_end = lap.ind(lap_nr+1)-1;
+                catch 
+                    lap_end = length(var.t);
+                end
             end
             FN = fieldnames(var);
             num = numel(FN);
@@ -31,12 +36,19 @@ function [] = plotTime_sector(ploty,sp,sp_nr,hndles,lap,lap_nr,Sector,Sect_plot)
     elseif nargin == 8 
             cla(sp)
             % Plot all graphs from category
-            lap_start = lap.ind(lap_nr);
+            
             var = eval(ploty);
-            try 
-                lap_end = lap.ind(lap_nr+1)-1;
-            catch 
+            
+            if isempty(lap.ind)
+                lap_start = 1;
                 lap_end = length(var.dist);
+            else
+                lap_start = lap.ind(lap_nr);
+                try 
+                    lap_end = lap.ind(lap_nr+1)-1;
+                catch 
+                    lap_end = length(var.dist);
+                end
             end
             FN = fieldnames(var);
             num = numel(FN);

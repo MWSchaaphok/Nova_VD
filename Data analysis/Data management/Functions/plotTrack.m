@@ -18,11 +18,16 @@ function [] = plotTrack(ploty,sp,sp_nr,hndles,lap,lap_nr)
     else
         var = eval(ploty);
         FN = fieldnames(var);
-        lap_start = lap.ind(lap_nr);
-        try 
-            lap_end = lap.ind(lap_nr+1)-1;
-        catch 
-            lap_end = length(var.dist);
+        if isempty(lap.ind)
+                lap_start = 1;
+                lap_end = length(var.dist);
+        else
+                lap_start = lap.ind(lap_nr);
+                try 
+                    lap_end = lap.ind(lap_nr+1)-1;
+                catch 
+                    lap_end = length(var.dist);
+                end
         end
         z = zeros(size(Xs));
         var.(FN{2}) = var.(FN{2})(lap_start:lap_end);

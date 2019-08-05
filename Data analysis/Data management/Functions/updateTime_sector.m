@@ -7,12 +7,17 @@ function [] = updateTime_sector(ploty,graph,sp,lap,lap_nr,Sector,Sect_plot)
     % Plot all graphs from category
     if nargin == 5
         var = eval(ploty);
-        lap_start = lap.ind(lap_nr);
-        try 
-            lap_end = lap.ind(lap_nr+1)-1;
-        catch 
-            lap_end = length(var.dist);
-        end
+                    if isempty(lap.ind)
+                lap_start = 1;
+                lap_end = length(var.dist);
+            else
+                lap_start = lap.ind(lap_nr);
+                try 
+                    lap_end = lap.ind(lap_nr+1)-1;
+                catch 
+                    lap_end = length(var.dist);
+                end
+            end
         plot(sp, var.t(lap_start:lap_end), var.(graph)(lap_start:lap_end))
         ttl = strrep(ploty,'_',' ');
         title(sp,[ttl,' over the track'])
@@ -23,13 +28,18 @@ function [] = updateTime_sector(ploty,graph,sp,lap,lap_nr,Sector,Sect_plot)
         hold(sp, 'off')
     elseif nargin == 7
         % Plot all graphs from category
-        lap_start = lap.ind(lap_nr);
         var = eval(ploty);
-        try 
-            lap_end = lap.ind(lap_nr+1)-1;
-        catch 
-            lap_end = length(var.dist);
-        end
+            if isempty(lap.ind)
+                lap_start = 1;
+                lap_end = length(var.dist);
+            else
+                lap_start = lap.ind(lap_nr);
+                try 
+                    lap_end = lap.ind(lap_nr+1)-1;
+                catch 
+                    lap_end = length(var.dist);
+                end
+            end
         var.t = var.t(lap_start:lap_end);
         var.(graph) = var.(graph)(lap_start:lap_end);
         for j= Sect_plot

@@ -182,21 +182,12 @@ function [gps,Angle,GyroAccel,BMS_V,BMS_C,BMS_T,MC_m,MC_PS,MC_Current,MC_Speed,M
 
     %% angle from accel and gyro data
     Angle.t = GyroAccel.t;
-    % X angles
-    Angle.AccelIX = atan(GyroAccel.IAx./sqrt(GyroAccel.IAy.^2 + GyroAccel.IAz.^2));
-    Angle.AccelX = atan(GyroAccel.Ax./sqrt(GyroAccel.Ay.^2 + GyroAccel.Az.^2));
-    Angle.GyroX = cumtrapz(GyroAccel.t, GyroAccel.Gx);
    
+    idx2 = ~isnan(GyroAccel.IAy);
     % Y angles
-    Angle.AccelIY = atan(GyroAccel.IAy./sqrt(GyroAccel.IAx.^2 + GyroAccel.IAz.^2));
-    Angle.AccelY = atan(GyroAccel.Ay./sqrt(GyroAccel.Ax.^2 + GyroAccel.Az.^2));
-    Angle.GyroY = cumtrapz(GyroAccel.t, GyroAccel.Gy);
-
-    
-    % Z angles
-    Angle.AccelIZ = atan(GyroAccel.IAz./sqrt(GyroAccel.IAx.^2 + GyroAccel.IAy.^2));
-    Angle.AccelZ = atan(GyroAccel.Az./sqrt(GyroAccel.Ax.^2 + GyroAccel.Ay.^2));
-    Angle.GyroZ = cumtrapz(GyroAccel.t, GyroAccel.Gz);
+    Angle.AccelIY = atan(GyroAccel.IAy(idx2)./sqrt(GyroAccel.IAx(idx2).^2 + GyroAccel.IAz(idx2).^2));
+    Angle.AccelY = atan(GyroAccel.Ay(idx2)./sqrt(GyroAccel.Ax(idx2).^2 + GyroAccel.Az(idx2).^2));
+    Angle.GyroY = cumtrapz(GyroAccel.t(idx2), GyroAccel.Gy(idx2));
    
 %     % plot the angles
 %     figure; hold on;

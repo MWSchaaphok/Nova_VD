@@ -9,14 +9,19 @@ function [] = plotDistance_sector(ploty,sp,sp_nr,hndles,lap,lap_nr,Sector,Sect_p
             cla(sp)
             % Plot all graphs from category
             var = eval(ploty);
-            lap_start = lap.ind(lap_nr);
-            try 
-                lap_end = lap.ind(lap_nr+1)-1;
-            catch 
+            if isempty(lap.ind)
+                lap_start = 1;
                 lap_end = length(var.dist);
+            else
+                lap_start = lap.ind(lap_nr);
+                try 
+                    lap_end = lap.ind(lap_nr+1)-1;
+                catch 
+                    lap_end = length(var.dist);
+                end
             end
             FN = fieldnames(var);
-            num = numel(FN);
+            num = max(2,numel(FN));
             for i = 2:num-1
                 plot(sp, var.dist(lap_start:lap_end), var.(FN{i})(lap_start:lap_end))
                 hold(sp, 'on'); 
@@ -31,12 +36,17 @@ function [] = plotDistance_sector(ploty,sp,sp_nr,hndles,lap,lap_nr,Sector,Sect_p
     elseif nargin == 8 
             cla(sp)
             % Plot all graphs from category
-            lap_start = lap.ind(lap_nr);
             var = eval(ploty);
-            try 
-                lap_end = lap.ind(lap_nr+1)-1;
-            catch 
+            if isempty(lap.ind)
+                lap_start = 1;
                 lap_end = length(var.dist);
+            else
+                lap_start = lap.ind(lap_nr);
+                try 
+                    lap_end = lap.ind(lap_nr+1)-1;
+                catch 
+                    lap_end = length(var.dist);
+                end
             end
             FN = fieldnames(var);
             num = numel(FN);
